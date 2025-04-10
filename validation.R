@@ -25,3 +25,31 @@ reglas = tribble(
   "r15", "(sn) es correcto", "as.integer(substr(subjectnumber,1,3))==countrycode",
   "r16", "mayor de edad", "as.integer(interval(fechaid, interview) / years(1)) > 18"
 )
+
+
+# TODO: adaptar funcion
+# Funcion validador()
+# argumentos:
+# - datos: conjunto de validacion
+# - id : nombre de la columna en (datos) con el identificador
+# - cond : nombre de la columna en (datos) con la condicion
+# salida: vector nombrado
+validador = function(datos, id, cond){
+  reglas = datos[[cond]]
+  names(reglas) = datos[[id]]
+  reglas
+}
+# Funcion validar()
+# argumentos:
+# - datos : conjunto de datos a validar
+# - id : nombre de la columna en (datos) con el identificador
+# - validador: salida de validador()
+# salida: tibble con el resultado de la validación
+validar = function(datos, id, validador){
+  sapply(
+    validador,
+    function(x) eval(parse(text = x), datos)
+  ) |>
+    dplyr::as_tibble() |>
+    dplyr::mutate(registro = datos[[id]], .before = 0)
+}
