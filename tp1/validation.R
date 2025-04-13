@@ -66,8 +66,17 @@ validacion_largo <- validacion %>%
   pivot_longer(-registro, names_to = "regla", values_to = "error")
 
 errores_por_registro <- validacion_largo %>%
-  filter(!error) %>%  # Filtramos los FALSE (condición no cumplida)
-  count(registro, name = "errores")
+  filter(!error) %>%  # Filtramos los casos donde la condición NO se cumplió (error)
+  group_by(registro) %>%
+  summarise(
+    n_errores = n(),
+    reglas_fallidas = str_c(regla, collapse = ", "),
+    .groups = 'drop'
+  ) %>%
+  left_join(
+    reglas %>% select(id, desc),
+    by = c("reglas_fallidas" = "id")
+  )
 
 errores_por_regla <- validacion_largo %>%
   filter(!error) %>%  # Filtramos los FALSE
