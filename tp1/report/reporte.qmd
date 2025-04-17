@@ -1,0 +1,68 @@
+---
+title: "TP1 Bioestdística"
+author: "Irisarri - Landa"
+toc: false
+output:
+  pdf_document: default
+toc-title: Contenido
+execute:
+  warning: false
+  message: false
+---
+
+\thispagestyle{empty}
+
+\begin{center}
+  \vspace*{1cm}
+
+  \Huge
+  \textbf{TP 1: Validación de datos}
+
+  \vspace{0.5cm}
+  \LARGE
+
+  \vspace{1.5cm}
+
+  \textbf{Alumnos:}  Malena Irisarri, Román Landa\\
+
+  \vfill
+
+  \includegraphics[width=0.9\textwidth]{logo_universidad}
+
+  \vspace{0.8cm}
+
+
+  Rosario, Argentina
+
+  17 de Abril de 2025
+\end{center}
+
+\newpage
+
+# Introducción
+
+Se llevó a cabo un estudio de investigación clínica multicéntrico con el fin de implementar estándares mundiales de crecimiento fetal que faciliten la detección temprana de alteraciones en el desarrollo del feto dentro del últero, y de esta manera reducir la morbi-mortalidad perinatal asociada con el crecimiento.
+
+Durante el período de reclutamiento, las mujeres admitidas en alguna de las clínicas de salud participantes cursando su primer trimestre de embarazo fueron invitadas a formar parte del estudio. Aquellas que cumplieron con los criterios de elegibilidad y dieron su consentimiento fueron seguidas según un esquema de visitas programado a las 14, 18, 24, 28, 32, 36 y 40 semanas de gestación. En cada visita, se tomaron medidas antropométricas del feto por medio de un ultrasonido.
+
+La información necesaria para llevar a cabo el análisis se recolectó a lo largo de 17 formularios en papel. Particularmente, en el formulario de admisión se registraron algunas características de la mujeres al momento de ingresar en el estudio. A las mujeres que cumplieron todos los criterios les fue asignado un código identificador único (Subject Number) compuesto por su código de páis, código del médico responsable, y el orden de ingreso. Sólo se entrevistaron mujeres mayores de edad (18 años o más al momento de la entrevista).
+
+# Datos
+
+Contamos con una base de 1000 pacientes, con las siguentes variables:
+
+```{r}
+#| message: false
+#| warning: false
+library(readxl)
+dd <- read_excel("tp1/datos/dd.xlsx")
+head(dd)
+```
+
+```{r}
+#| message: false
+#| warning: false
+adm <- read_excel("tp1/datos/adm.xlsx")
+head(adm)
+```
+

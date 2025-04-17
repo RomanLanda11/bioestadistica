@@ -1,9 +1,10 @@
 library(readxl)
 library(lubridate)
 library(tidyverse)
+library(writexl)
 
-dd <- read_excel("tp1/dd.xlsx")
-adm <- read_excel("tp1/adm.xlsx") %>%
+dd <- read_excel("tp1/datos/dd.xlsx")
+adm <- read_excel("tp1/datos/adm.xlsx") %>%
   mutate(
     # Extraer y convertir fechas con formato dd/mm/yyyy
     fechaid = dmy(sub("-.*", "", patientid)),  # se queda con fecha
@@ -16,34 +17,37 @@ adm <- read_excel("tp1/adm.xlsx") %>%
   )
 
 # Reglas de validación
-reglas = tribble(
+reglas <- tribble(
   ~id, ~desc, ~cond,
-  "r1", "(cc) es faltante", "!is.na(countrycode)",
-  "r2", "(cc) es entero", "is.integer(countrycode)",
-  "r3", "(cc) fuera de rango", "countrycode %in% c(4,11,14,23,31,48,54,65,72,97)",
-  "r4", "(fid) es faltante", "!is.na(fechaid)",  
-  "r5", "(fid) es fecha", "is.Date(fechaid)",
-  "r6", "(iid) es faltante", "!is.na(inicialesid)",
-  "r7", "(iid) es caracter", "is.character(inicialesid)", 
-  "r8", "(iid) es mayuscula", "grepl('^[A-Z]{2}$', inicialesid)",
-  "r9", "(interview) es faltante", "!is.na(interview)",  
-  "r10", "(interview) es fecha","is.Date(interview)",
-  "r11", "(eg) es faltante", "!is.na(ethnicgroup)",
-  "r12", "(eg) es entero", "is.integer(ethnicgroup)",
-  "r13", "(eg) fuera de rango", "ethnicgroup %in% c(1:4)",
-  "r14", "(scr) es faltante", "!is.na(scr)",
-  "r15", "scr fuera de rango", "scr %in% c(1,2)",
-  "r16", "(usscr) es faltante", "!is.na(usscr)",
-  "r17", "(usscr) dentro de rango", "usscr %in% c(1,2)",
-  "r18", "(concent) es faltante", "!is.na(concent)",
-  "r19", "(concent) dentro de rango", "concent %in% c(1,2)",
-  "r20", "(sn) es faltante", "!is.na(subjectnumber)",
-  "r21", "(sn) obligatorio si pasa screening", "ifelse(scr == 2 & usscr == 2 & concent == 2, !is.na(subjectnumber), TRUE)",
-  "r22", "(sn) coincide con cc", "as.integer(substr(subjectnumber,1,3)) == countrycode",
-  "r23", "(sn) no debería estar si scr=1", "ifelse(scr == 1, is.na(subjectnumber), TRUE)",
-  "r24", "(sn) no debería estar si usscr=1", "ifelse(usscr == 1, is.na(subjectnumber), TRUE)",
-  "r25", "(sn) no debería estar si concent=1", "ifelse(concent == 1, is.na(subjectnumber), TRUE)"
+  "r1", "(patientid) es faltante", "!is.na(patientid)",
+  "r2", "(countrycode) es faltante", "!is.na(countrycode)",
+  "r3", "(countrycode) es entero", "is.integer(countrycode)",
+  "r4", "(countrycode) fuera de rango", "countrycode %in% c(4,11,14,23,31,48,54,65,72,97)",
+  "r5", "(fechaid) es faltante", "!is.na(fechaid)",  
+  "r6", "(fechaid) es fecha", "is.Date(fechaid)",
+  "r7", "(inicialesid) es faltante", "!is.na(inicialesid)",
+  "r8", "(inicialesid) es caracter", "is.character(inicialesid)", 
+  "r9", "(inicialesid) es mayuscula", "grepl('^[A-Z]{2}$', inicialesid)",
+  "r10", "(interview) es faltante", "!is.na(interview)",  
+  "r11", "(interview) es fecha","is.Date(interview)",
+  "r12", "(ethnicgroup) es faltante", "!is.na(ethnicgroup)",
+  "r13", "(ethnicgroup) es entero", "is.integer(ethnicgroup)",
+  "r14", "(ethnicgroup) fuera de rango", "ethnicgroup %in% c(1:4)",
+  "r15", "(scr) es faltante", "!is.na(scr)",
+  "r16", "(scr) fuera de rango", "scr %in% c(1,2)",
+  "r17", "(usscr) es faltante", "!is.na(usscr)",
+  "r18", "(usscr) dentro de rango", "usscr %in% c(1,2)",
+  "r19", "(consent) es faltante", "!is.na(consent)",
+  "r20", "(consent) dentro de rango", "consent %in% c(1,2)",
+  "r21", "(subjectnumber) es faltante", "!is.na(subjectnumber)",
+  "r22", "(subjectnumber) obligatorio si pasa screening", "ifelse(scr == 2 & usscr == 2 & consent == 2, !is.na(subjectnumber), TRUE)",
+  "r23", "(subjectnumber) coincide con cc", "as.integer(substr(subjectnumber,1,3)) == countrycode",
+  "r24", "(subjectnumber) no debería estar si scr=1", "ifelse(scr == 1, is.na(subjectnumber), TRUE)",
+  "r25", "(subjectnumber) no debería estar si usscr=1", "ifelse(usscr == 1, is.na(subjectnumber), TRUE)",
+  "r26", "(subjectnumber) no debería estar si consent=1", "ifelse(consent == 1, is.na(subjectnumber), TRUE)"
 )
+
+write_xlsx(reglas, "tp1/report/reglas_validacion.xlsx")
 
 # Función validador
 validador <- function(datos, id, cond) {
