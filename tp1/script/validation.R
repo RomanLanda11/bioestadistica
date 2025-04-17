@@ -44,7 +44,8 @@ reglas <- tribble(
   "r23", "(subjectnumber) coincide con cc", "as.integer(substr(subjectnumber,1,3)) == countrycode",
   "r24", "(subjectnumber) no debería estar si scr=1", "ifelse(scr == 1, is.na(subjectnumber), TRUE)",
   "r25", "(subjectnumber) no debería estar si usscr=1", "ifelse(usscr == 1, is.na(subjectnumber), TRUE)",
-  "r26", "(subjectnumber) no debería estar si consent=1", "ifelse(consent == 1, is.na(subjectnumber), TRUE)"
+  "r26", "(subjectnumber) no debería estar si consent=1", "ifelse(consent == 1, is.na(subjectnumber), TRUE)",
+  "r27", "paciente mayor de edad", "!is.na(fechaid) & !is.na(interview) & (interval(fechaid, interview) / years(1)) >= 18"
 )
 
 write_xlsx(reglas, "tp1/report/reglas_validacion.xlsx")
@@ -103,4 +104,36 @@ detalles_errores <- validacion_largo %>%
   left_join(reglas, by = c("regla" = "id")) %>%
   left_join(adm, by = c("registro" = "patientid"))
 
-#TODO: corroborar que los errores y los conteos de errores esten bien
+reglas <- reglas %>%
+  mutate(
+    campo = case_when(
+      str_detect(cond, "patientid") ~ "patientid",
+      str_detect(cond, "countrycode") ~ "countrycode",
+      str_detect(cond, "fechaid") ~ "fechaid",
+      str_detect(cond, "inicialesid") ~ "inicialesid",
+      str_detect(cond, "interview") ~ "interview",
+      str_detect(cond, "ethnicgroup") ~ "ethnicgroup",
+      str_detect(cond, "scr") ~ "scr",
+      str_detect(cond, "usscr") ~ "usscr",
+      str_detect(cond, "consent") ~ "consent",
+      str_detect(cond, "subjectnumber") ~ "subjectnumber",
+      TRUE ~ NA_character_
+    )
+  )
+
+errores_por_registro <- validacion_largo %>%
+  filter(!error) %>%
+  left_join(reglas, by = c("regla" = "id")) %>%
+  group_by(registro) %>%
+  summarise(
+    n_errores = n(),
+    reglas_fallidas = str_c(regla, collapse = ", "),
+    campos_con_error = str_c(unique(campo), collapse = ", "),
+    .groups = 'drop'
+  )
+
+campo_mas_frecuente <- errores_por_registro %>%
+  separate_rows(campos_con_error, sep = ",\\s*") %>%  # separa por coma + espacio opcional
+  count(campos_con_error, sort = TRUE)  # cuenta ocurrencias y ordena
+
+campo_mas_frecuente
