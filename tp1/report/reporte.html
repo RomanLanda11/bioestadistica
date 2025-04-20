@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.4.553">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -79,21 +79,16 @@ ul.task-list li input[type="checkbox"] {
 <section id="datos" class="level1">
 <h1>Datos</h1>
 <p>Contamos con una base de 1000 pacientes, con las siguentes variables:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 8 × 5
-  variable      description                                  type  format values
-  &lt;chr&gt;         &lt;chr&gt;                                        &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; 
-1 countrycode   a) Country code                              nume… &lt;NA&gt;   4, 11…
-2 patientid     b) Patient ID                                char… dd/mm… &lt;NA&gt;  
-3 interview     c) Date of interview                         date  dd/mm… &lt;NA&gt;  
-4 ethnicgroup   d) Ethnic group                              inte… &lt;NA&gt;   1 = '…
-5 scr           1. The woman is eligible according to CLIN-… inte… &lt;NA&gt;   1 = '…
-6 usscr         2. The woman is eligible according to US-SC… inte… &lt;NA&gt;   1 = '…
-7 consent       3. The woman agreed to participate and sign… inte… &lt;NA&gt;   1 = '…
-8 subjectnumber Subject number                               char… &lt;NA&gt;   &lt;NA&gt;  </code></pre>
-</div>
-</div>
+<ul>
+<li><p>countrycode: Código del país (tipo: numérico)</p></li>
+<li><p>Patientid: Identificación única del paciente (tipo: carácter)</p></li>
+<li><p>interview: Fecha de la entrevista (tipo: fecha)</p></li>
+<li><p>ethnicgroup: Grupo étnico (tipo: entero)</p></li>
+<li><p>scr: Elegibilidad según el formulario CLIN-SCR (tipo: entero) Este campo indica si la mujer es elegible de acuerdo con los criterios establecidos en el formulario CLIN-SCR. Un valor de 1 indica elegibilidad, mientras que un valor de 0 indica no elegibilidad.</p></li>
+<li><p>usscr: Elegibilidad según el formulario US-SCR (tipo: entero) Similar al anterior, este campo indica la elegibilidad de la mujer según el formulario US-SCR. Los valores son 1 para elegible y 0 para no elegible.</p></li>
+<li><p>consent: Consentimiento (tipo: entero) Este campo refleja si la mujer aceptó participar y escribió el formulario de consentimiento. Un valor de 1 indica que firmó el consentimiento, mientras que un valor de 0 indica que no lo hizo.</p></li>
+<li><p>subjectnumber : Número de sujeto (tipo: carácter) Este campo representa un número único para identificar al sujeto en el estudio, expresado como texto.</p></li>
+</ul>
 <p>Los primeros registros son:</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
@@ -112,25 +107,34 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="reglas" class="level1">
 <h1>Reglas</h1>
-<p>Se plantean las siguientes reglas</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 27 × 3
-   id    desc                         cond                                      
-   &lt;chr&gt; &lt;chr&gt;                        &lt;chr&gt;                                     
- 1 r1    (patientid) es faltante      !is.na(patientid)                         
- 2 r2    (countrycode) es faltante    !is.na(countrycode)                       
- 3 r3    (countrycode) es entero      is.integer(countrycode)                   
- 4 r4    (countrycode) fuera de rango countrycode %in% c(4,11,14,23,31,48,54,65…
- 5 r5    (fechaid) es faltante        !is.na(fechaid)                           
- 6 r6    (fechaid) es fecha           is.Date(fechaid)                          
- 7 r7    (inicialesid) es faltante    !is.na(inicialesid)                       
- 8 r8    (inicialesid) es caracter    is.character(inicialesid)                 
- 9 r9    (inicialesid) es mayuscula   grepl('^[A-Z]{2}$', inicialesid)          
-10 r10   (interview) es faltante      !is.na(interview)                         
-# ℹ 17 more rows</code></pre>
-</div>
-</div>
+<p>Se realizaron diversas validaciones para asegurar la integridad y calidad de los datos de los pacientes. A continuación, se detallan las comprobaciones efectuadas:</p>
+<p>1.Identificador del Paciente: Se comprobó la existencia del identificador único asignado a cada registro (no valores faltantes).</p>
+<p>2.Código de País: Se comprobó la existencia del código de país para cada paciente (no valores faltantes).</p>
+<p>3.Formato del Código de País: Se validó que el código de país se registrara como un número entero.</p>
+<p>4.Validez del Código de País: Se comprobó que el código de país correspondiera a una lista predefinida de códigos válidos.</p>
+<p>5.Fecha de Identificación: Se comprobó la existencia de la fecha de identificación para cada paciente (no valores faltantes).</p>
+<p>6.Formato de la Fecha de Identificación: Se verificó que la fecha de identificación se registrara en un formato de fecha válido.</p>
+<p>7.Iniciales del Paciente: Se comprobó la existencia de las iniciales del paciente en cada registro (no valores faltantes).</p>
+<p>8.Formato de las Iniciales: Se validó que las iniciales del paciente se registraran como texto.</p>
+<p>9.Formato Específico de las Iniciales: Se comprobó que las iniciales consistieran exactamente en dos letras mayúsculas.</p>
+<p>10.Fecha de la Entrevista: Se comprobó la existencia de la fecha de la entrevista para cada paciente (no valores faltantes).</p>
+<p>11.Formato de la Fecha de la Entrevista: Se validó que la fecha de la entrevista se registrara en un formato de fecha válido.</p>
+<p>12.Grupo Étnico: Se comprobó la existencia de información sobre el grupo étnico del paciente (no valores faltantes).</p>
+<p>13.Formato del Grupo Étnico: Se validó que el grupo étnico se registrara como un número entero.</p>
+<p>14.Validez del Grupo Étnico: Se comprobó que el código del grupo étnico correspondiera a una lista predefinida de valores válidos.</p>
+<p>15.Resultado del Screening (SCR): Se comprobó la existencia del resultado del screening (no valores faltantes).</p>
+<p>16.Validez del Resultado del Screening (SCR): Se comprobó que el resultado del screening correspondiera a una lista predefinida de valores válidos.</p>
+<p>17.Resultado del Ultra-Screening (USSCR): Se comprobó la existencia del resultado del ultra-screening (no valores faltantes).</p>
+<p>18.Validez del Resultado del Ultra-Screening (USSCR): Se comprobó que el resultado del ultra-screening correspondiera a una lista predefinida de valores válidos.</p>
+<p>19.Consentimiento Informado: Se comprobó la existencia de información sobre el consentimiento informado del paciente (no valores faltantes).</p>
+<p>20.Validez del Consentimiento Informado: Se comprobó que la información del consentimiento informado correspondiera a una lista predefinida de valores válidos.</p>
+<p>21.Número de Sujeto: Se comprobó la existencia del número de sujeto asignado a cada paciente (no valores faltantes).</p>
+<p>22.Obligatoriedad del Número de Sujeto: Se validó que el número de sujeto estuviera presente en los casos donde el paciente pasó las etapas de screening y consentimiento.</p>
+<p>23.Consistencia del Número de Sujeto con el Código de País: Se comprobó que los primeros tres dígitos del número de sujeto coincidieran con el código de país del paciente.</p>
+<p>24.Ausencia Inesperada del Número de Sujeto (SCR=1): Se verificó que el número de sujeto no estuviera presente en los casos donde el resultado del screening fue negativo.</p>
+<p>25.Ausencia Inesperada del Número de Sujeto (USSCR=1): Se verificó que el número de sujeto no estuviera presente en los casos donde el resultado del ultra-screening fue negativo.</p>
+<p>26.Ausencia Inesperada del Número de Sujeto (Consent=1): Se verificó que el número de sujeto no estuviera presente en los casos donde el paciente no dio su consentimiento.</p>
+<p>27.Mayoría de Edad del Paciente: Se validó que, para los casos donde se disponía de la fecha de identificación y la fecha de la entrevista, el paciente tuviera la edad legal establecida.</p>
 </section>
 <section id="resultados" class="level1">
 <h1>Resultados</h1>
@@ -138,22 +142,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Matriz de validación de tipo Registro (filas) X Regla (columnas)</li>
 </ul>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 28
-  registro     r1    r2    r3    r4    r5    r6    r7    r8    r9    r10   r11  
-  &lt;chr&gt;        &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt;
-1 15/03/1989-… TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
-2 19/03/1973-… TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
-3 26/11/1994-… TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
-4 18/04/1990-… TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
-5 01/01/1981-… TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
-6 13/12/1981-… TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
-# ℹ 16 more variables: r12 &lt;lgl&gt;, r13 &lt;lgl&gt;, r14 &lt;lgl&gt;, r15 &lt;lgl&gt;, r16 &lt;lgl&gt;,
-#   r17 &lt;lgl&gt;, r18 &lt;lgl&gt;, r19 &lt;lgl&gt;, r20 &lt;lgl&gt;, r21 &lt;lgl&gt;, r22 &lt;lgl&gt;,
-#   r23 &lt;lgl&gt;, r24 &lt;lgl&gt;, r25 &lt;lgl&gt;, r26 &lt;lgl&gt;, r27 &lt;lgl&gt;</code></pre>
-</div>
-</div>
+<p><img src="C:/Escritorio/FACULTAD/5°%20año%201°%20cuatrimestre/Bioestadística/bioestadistica/tp1/valid.png.jpeg" class="img-fluid"></p>
 <ul>
 <li>Número de participantes limpios:</li>
 </ul>
@@ -162,24 +151,7 @@ ul.task-list li input[type="checkbox"] {
 <li>Participantes con inconsistencias:</li>
 </ul>
 <p>La lista de participantes con inconsistencias es</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 241 × 4
-   registro      n_errores reglas_fallidas desc                                 
-   &lt;chr&gt;             &lt;int&gt; &lt;chr&gt;           &lt;chr&gt;                                
- 1 01/01/1989-KR         2 r21, r22        &lt;NA&gt;                                 
- 2 01/04/1981-RT         2 r21, r22        &lt;NA&gt;                                 
- 3 01/04/1981-ZT         2 r12, r14        &lt;NA&gt;                                 
- 4 01/04/1987-CI         1 r25             (subjectnumber) no debería estar si …
- 5 01/04/1987-GU         1 r26             (subjectnumber) no debería estar si …
- 6 01/05/1982-UX         2 r21, r22        &lt;NA&gt;                                 
- 7 01/06/1977-HF         2 r21, r22        &lt;NA&gt;                                 
- 8 01/06/1992-EJ         1 r24             (subjectnumber) no debería estar si …
- 9 01/09/1990-YH         1 r23             (subjectnumber) coincide con country…
-10 01/09/1993-QZ         2 r12, r14        &lt;NA&gt;                                 
-# ℹ 231 more rows</code></pre>
-</div>
-</div>
+<p><img src="C:/Escritorio/FACULTAD/5°%20año%201°%20cuatrimestre/Bioestadística/bioestadistica/tp1/errores%20x%20reg.jpeg" class="img-fluid"></p>
 <ul>
 <li>Inconsistencias más frecuentes:</li>
 </ul>
@@ -190,28 +162,11 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Por último, la regla 14, que evalua si el campo <em>ethnic group</em> es uno de los valores admitidos.</p></li>
 </ol>
 <p>Presentamos el resto de las reglas con errores en las siguiente tabla:</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 11 × 4
-   regla errores desc                                          cond             
-   &lt;chr&gt;   &lt;int&gt; &lt;chr&gt;                                         &lt;chr&gt;            
- 1 r21       100 (subjectnumber) es faltante                   !is.na(subjectnu…
- 2 r22        97 (subjectnumber) obligatorio si pasa screening ifelse(scr == 2 …
- 3 r14        51 (ethnicgroup) fuera de rango                  ethnicgroup %in%…
- 4 r23        41 (subjectnumber) coincide con countrycode      as.integer(subst…
- 5 r26        30 (subjectnumber) no debería estar si consent=1 ifelse(consent =…
- 6 r12        26 (ethnicgroup) es faltante                     !is.na(ethnicgro…
- 7 r25        18 (subjectnumber) no debería estar si usscr=1   ifelse(usscr == …
- 8 r24        10 (subjectnumber) no debería estar si scr=1     ifelse(scr == 1,…
- 9 r27         3 paciente mayor de edad                        !is.na(fechaid) …
-10 r19         1 (consent) es faltante                         !is.na(consent)  
-11 r20         1 (consent) dentro de rango                     consent %in% c(1…</code></pre>
-</div>
-</div>
+<p><img src="C:/Escritorio/FACULTAD/5°%20año%201°%20cuatrimestre/Bioestadística/bioestadistica/tp1/errores.jpeg" class="img-fluid"></p>
 <ul>
 <li>Campos con más errores:</li>
 </ul>
-<p>El campo con mas errores de la base es <em>subject number</em></p>
+<p>El campo con mas errores de la base es <em>subject number</em> con 97 errores.</p>
 </section>
 
 </main>
@@ -251,7 +206,18 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
     return false;
   }
-  const onCopySuccess = function(e) {
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
     // button target
     const button = e.trigger;
     // don't keep focus
@@ -283,29 +249,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }, 1000);
     // clear code selection
     e.clearSelection();
-  }
-  const getTextToCopy = function(trigger) {
-      const codeEl = trigger.previousElementSibling.cloneNode(true);
-      for (const childEl of codeEl.children) {
-        if (isCodeAnnotation(childEl)) {
-          childEl.remove();
-        }
-      }
-      return codeEl.innerText;
-  }
-  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
-    text: getTextToCopy
   });
-  clipboard.on('success', onCopySuccess);
-  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
-    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
-      text: getTextToCopy,
-      container: window.document.getElementById('quarto-embedded-source-code-modal')
-    });
-    clipboardModal.on('success', onCopySuccess);
-  }
     var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
     var mailtoRegex = new RegExp(/^mailto:/);
       var filterRegex = new RegExp('/' + window.location.host + '/');
@@ -313,7 +257,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
     }
     // Inspect non-navigation links and adorn them if external
- 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
     for (var i=0; i<links.length; i++) {
       const link = links[i];
       if (!isInternal(link.href)) {

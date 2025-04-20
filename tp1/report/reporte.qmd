@@ -60,9 +60,29 @@ library(lubridate)
 library(tidyverse)
 library(writexl)
 
-dd <- read_excel("C:/Users/landar/Documents/Facultad/Bioestadistica/bioestadistica/tp1/datos/dd.xlsx")
-dd
+dd <- read_excel("C:/Escritorio/FACULTAD/5° año 1° cuatrimestre/Bioestadística/bioestadistica/tp1/datos/dd.xlsx")
+
 ```
+
+ * countrycode: Código del país (tipo: numérico) 
+
+ * Patientid: Identificación única del paciente (tipo: carácter) 
+
+ * interview: Fecha de la entrevista (tipo: fecha) 
+
+ * ethnicgroup: Grupo étnico (tipo: entero) 
+
+ * scr: Elegibilidad según el formulario CLIN-SCR (tipo: entero) 
+Este campo indica si la mujer es elegible de acuerdo con los criterios establecidos en el formulario CLIN-SCR. Un valor de 1 indica elegibilidad, mientras que un valor de 0 indica no elegibilidad.
+
+ * usscr: Elegibilidad según el formulario US-SCR (tipo: entero) 
+Similar al anterior, este campo indica la elegibilidad de la mujer según el formulario US-SCR. Los valores son 1 para elegible y 0 para no elegible.
+
+ * consent: Consentimiento (tipo: entero) 
+Este campo refleja si la mujer aceptó participar y escribió el formulario de consentimiento. Un valor de 1 indica que firmó el consentimiento, mientras que un valor de 0 indica que no lo hizo.
+
+ * subjectnumber : Número de sujeto (tipo: carácter) 
+Este campo representa un número único para identificar al sujeto en el estudio, expresado como texto.
 
 Los primeros registros son:
 
@@ -70,7 +90,7 @@ Los primeros registros son:
 #| echo: false
 #| message: false
 #| warning: false
-adm <- read_excel("C:/Users/landar/Documents/Facultad/Bioestadistica/bioestadistica/tp1/datos/adm.xlsx") %>%
+adm <- read_excel("C:/Escritorio/FACULTAD/5° año 1° cuatrimestre/Bioestadística/bioestadistica/tp1/datos/adm.xlsx") %>%
   mutate(
     # Extraer y convertir fechas con formato dd/mm/yyyy
     fechaid = dmy(sub("-.*", "", patientid)),  # se queda con fecha
@@ -86,7 +106,61 @@ head(adm)
 
 # Reglas
 
-Se plantean las siguientes reglas
+Se realizaron diversas validaciones para asegurar la integridad y calidad de los datos de los pacientes. A continuación, se detallan las comprobaciones efectuadas:
+
+ 1.Identificador del Paciente: Se comprobó la existencia del identificador único asignado a cada registro (no valores faltantes).
+
+ 2.Código de País: Se comprobó la existencia del código de país para cada paciente (no valores faltantes).
+
+ 3.Formato del Código de País: Se validó que el código de país se registrara como un número entero.
+
+ 4.Validez del Código de País: Se comprobó que el código de país correspondiera a una lista predefinida de códigos válidos.
+
+ 5.Fecha de Identificación: Se comprobó la existencia de la fecha de identificación para cada paciente (no valores faltantes).
+
+ 6.Formato de la Fecha de Identificación: Se verificó que la fecha de identificación se registrara en un formato de fecha válido.
+
+ 7.Iniciales del Paciente: Se comprobó la existencia de las iniciales del paciente en cada registro (no valores faltantes).
+
+ 8.Formato de las Iniciales: Se validó que las iniciales del paciente se registraran como texto.
+
+ 9.Formato Específico de las Iniciales: Se comprobó que las iniciales consistieran exactamente en dos letras mayúsculas.
+
+ 10.Fecha de la Entrevista: Se comprobó la existencia de la fecha de la entrevista para cada paciente (no valores faltantes).
+
+ 11.Formato de la Fecha de la Entrevista: Se validó que la fecha de la entrevista se registrara en un formato de fecha válido.
+
+ 12.Grupo Étnico: Se comprobó la existencia de información sobre el grupo étnico del paciente (no valores faltantes).
+
+ 13.Formato del Grupo Étnico: Se validó que el grupo étnico se registrara como un número entero.
+
+ 14.Validez del Grupo Étnico: Se comprobó que el código del grupo étnico correspondiera a una lista predefinida de valores válidos.
+
+ 15.Resultado del Screening (SCR): Se comprobó la existencia del resultado del screening (no valores faltantes).
+
+ 16.Validez del Resultado del Screening (SCR): Se comprobó que el resultado del screening correspondiera a una lista predefinida de valores válidos.
+
+ 17.Resultado del Ultra-Screening (USSCR): Se comprobó la existencia del resultado del ultra-screening (no valores faltantes).
+
+ 18.Validez del Resultado del Ultra-Screening (USSCR): Se comprobó que el resultado del ultra-screening correspondiera a una lista predefinida de valores válidos.
+
+ 19.Consentimiento Informado: Se comprobó la existencia de información sobre el consentimiento informado del paciente (no valores faltantes).
+
+ 20.Validez del Consentimiento Informado: Se comprobó que la información del consentimiento informado correspondiera a una lista predefinida de valores válidos.
+
+ 21.Número de Sujeto: Se comprobó la existencia del número de sujeto asignado a cada paciente (no valores faltantes).
+
+ 22.Obligatoriedad del Número de Sujeto: Se validó que el número de sujeto estuviera presente en los casos donde el paciente pasó las etapas de screening y consentimiento.
+
+ 23.Consistencia del Número de Sujeto con el Código de País: Se comprobó que los primeros tres dígitos del número de sujeto coincidieran con el código de país del paciente.
+
+ 24.Ausencia Inesperada del Número de Sujeto (SCR=1): Se verificó que el número de sujeto no estuviera presente en los casos donde el resultado del screening fue negativo.
+
+ 25.Ausencia Inesperada del Número de Sujeto (USSCR=1): Se verificó que el número de sujeto no estuviera presente en los casos donde el resultado del ultra-screening fue negativo.
+
+ 26.Ausencia Inesperada del Número de Sujeto (Consent=1): Se verificó que el número de sujeto no estuviera presente en los casos donde el paciente no dio su consentimiento.
+
+ 27.Mayoría de Edad del Paciente: Se validó que, para los casos donde se disponía de la fecha de identificación y la fecha de la entrevista, el paciente tuviera la edad legal establecida.
 
 ```{r}
 #| echo: false
@@ -121,7 +195,6 @@ reglas <- tribble(
   "r26", "(subjectnumber) no debería estar si consent=1", "ifelse(consent == 1, is.na(subjectnumber), TRUE)",
   "r27", "paciente mayor de edad", "!is.na(fechaid) & !is.na(interview) & (interval(fechaid, interview) / years(1)) >= 18"
 )
-reglas
 
 ```
 
@@ -163,9 +236,10 @@ validacion <- validar(adm, "patientid", validador(reglas, "id", "cond"))
 validacion_largo <- validacion %>%
   pivot_longer(-registro, names_to = "regla", values_to = "error")
 
-head(validacion)
-```
+#write_xlsx(validacion, "C:/Escritorio/FACULTAD/5° año 1° cuatrimestre/Bioestadística/bioestadistica/validacion_resultados.xlsx")
 
+```
+![](C:/Escritorio/FACULTAD/5° año 1° cuatrimestre/Bioestadística/bioestadistica/tp1/valid.png.jpeg)
 
 - Número de participantes limpios:
 
@@ -190,9 +264,11 @@ errores_por_registro <- validacion_largo %>%
     by = c("reglas_fallidas" = "id")
   )
 
-errores_por_registro
+# errores_por_registro
+# write_xlsx(errores_por_registro, "C:/Escritorio/FACULTAD/5° año 1° cuatrimestre/Bioestadística/bioestadistica/erroresxreg.xlsx")
 ```
 
+![](C:/Escritorio/FACULTAD/5° año 1° cuatrimestre/Bioestadística/bioestadistica/tp1/errores x reg.jpeg)
 
 -  Inconsistencias más frecuentes:
 
@@ -218,9 +294,12 @@ detalles_errores <- validacion_largo %>%
   left_join(reglas, by = c("regla" = "id")) %>%
   left_join(adm, by = c("registro" = "patientid"))
 
-errores_por_regla %>%
-  arrange(desc(errores))
+# errores_por_regla %>%
+#   arrange(desc(errores))
+# write_xlsx(errores_por_regla, "C:/Escritorio/FACULTAD/5° año 1° cuatrimestre/Bioestadística/bioestadistica/errores.xlsx")
 ```
+
+![](C:/Escritorio/FACULTAD/5° año 1° cuatrimestre/Bioestadística/bioestadistica/tp1/errores.jpeg)
 
 -  Campos con más errores:
 
