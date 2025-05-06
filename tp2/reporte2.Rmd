@@ -122,5 +122,80 @@ Segundo, la vacuna se basa en una plataforma de virus vivo atenuado y, por tanto
 Tercero, la inmunogenicidad se determinó en un subconjunto pequeño de participantes. Sin embargo, la población por protocolo analizada para los desenlaces de inmunogenicidad fue representativa de toda la población del estudio al comparar los datos demográficos.
 Cuarto, para ser altamente eficaz en el control de una enfermedad endémica, una vacuna contra el chikunguña también debe administrarse a niños 
 
-El estudio tiene validez interna sólida debido a su correcta aleatorización y enmascaramiento, pero la validez externa es criticable, dado que los resultados son aplicables a poblaciones sanas. Se necesitan más datos en contextos endémicos y grupos vulnerables.
+El estudio tiene validez interna sólida  porque cumple con las siguientes consideraciones que deben tener los ensayos clínicos:
+
+ * Correcta aleatorización
+ 
+ * Enmascaramiento (en este caso doble ciego)
+ 
+ * Cumple con las buenas prácticas médicas
+ 
+ * Los pacientes firman el consentimiento informado
+ 
+ * Las definiciones de los eventos están bien explícitas
+ 
+ * Existe un comité de ética
+ 
+Pero, por lo mencionado anteriormente la validez externa es criticable, dado que los resultados son aplicables a poblaciones sanas. Se necesitan más datos en contextos endémicos y grupos vulnerables.
 Para una evaluación definitiva, serían ideales estudios de fase 4 en condiciones reales.
+
+
+
+## Cálculo del tamaño de muestra
+
+$\alpha=0.05$
+$\delta=1/1000=0.001$
+$\beta=0.2$
+
+
+```{r}
+library(writexl)
+## Aleatorización por centro: 
+## 200 pacientes por centro, 6 centros, 2 tratamientos, relación 1:1
+
+#Opción 1. library(blockrand) 
+
+library(blockrand)
+
+N <- 200                            #Tamaño de muestra por centro
+a <- 2                              #Cantidad de tratamientos
+tratam <- c("A","B")                #Nombre de los tratamientos
+
+opcion1=NULL
+for (i in 1:6) {
+  set.seed(1850+i)      # Se establece una semilla fija para 
+                        # reproducir siempre la misma secuencia
+                        # una semilla diferente para cada centro
+  
+  centro <- blockrand( n=N,num.levels=a,levels=tratam,
+                       block.sizes = c(2,3), #Esto indica cuantas veces aparece 
+                                             #cada tratamiento en un bloque. 
+                                             #aleatoriamente se asignan bloques 
+                                             #de tamaño 4 y 6
+                       id.prefix=paste0("Centro",i,"-")) 
+  
+  opcion1 <- rbind(opcion1,centro)
+}
+
+write_xlsx(opcion1, path="C:/Users/User/Desktop/Materias Facu/Bioestadística/2025/4. Aleatorización/opcion1.xls")
+
+
+
+#Opción 2. library(randomizeR)
+
+library(randomizeR)
+par<-rpbrPar(N=N,
+             rb=c(4,6),          #genera bloques aleatorios de tamaño 4 y 6
+             K = a,
+             ratio = rep(1, 2),
+             groups = tratam,
+             filledBlock = FALSE
+)  
+
+opcion2<-genSeq(par,6)
+
+secuencia<-as.data.frame(getRandList(opcion2))      #Lista de la secuencia
+
+write_xlsx(secuencia, path="C:/Users/User/Desktop/Materias Facu/Bioestadística/2025/4. Aleatorización/opcion2.xls")
+```
+
