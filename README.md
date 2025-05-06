@@ -7,7 +7,9 @@ A repository for the subject Bioestadistica
 bioestadistica/
 │       
 └── tp1/
-    ├── datos/
-    ├── 
-    └── script/
+│    ├── datos/
+│    ├── 
+│    └── script/
+│    
+└── tp2/
 ```
