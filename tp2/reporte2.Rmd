@@ -148,11 +148,11 @@ $p_{tratamiento}=0.7$
 $p_{placebo}=$
 $\beta=$
 
-```{r}
+```{r include=FALSE}
 alpha=0.05      #Nivel de significacion
 p_trat=0.7      #Proporcion de seroproteccion
 beta=0.1        #1-Potencia
-p_placebo=0.3    
+p_placebo=0.4    
 z_alpha2=qnorm(alpha/2)
 z_beta=qnorm(beta)
 R_0=0.1         #tasa de abandono
@@ -163,12 +163,14 @@ n=((z_alpha2+z_beta)^2)*(p_trat*(1-p_trat)+p_placebo*(1-p_placebo))/(p_placebo-p
 
 # Ajuste por pérdida de seguimiento
 
-n_trat=n*(1+R_0)
-n_placebo = n_trat*3
+n_placebo=n*(1+R_0)
+n_trat = n_placebo*3
 n_total=n_trat+n_placebo
 
 ```
-```{r}
+
+
+```{r echo=FALSE}
 # Parámetros fijos
 alpha <- 0.05
 p_trat <- 0.7      # Proporción fija en tratamiento
@@ -216,75 +218,120 @@ ggplot(resultados, aes(x = p_placebo, y = Tamaño, color = as.factor(Potencia)))
         legend.position = "bottom")
 
 # Mostrar tabla de resultados
-library(knitr)
-kable(resultados, caption = "Resultados detallados")
+#library(knitr)
+#kable(resultados, caption = "Resultados detallados")
 ```
-Tamaño elegido: 52 placebos y 52*3=156 tratamientos
-total 208
+Tamaño elegido: $58$ placebos y $58 . 3 = 174$ tratamientos
+Total $232$
+
+```{r echo=TRUE}
+library(blockrand)
+library(randomizeR)
+
+set.seed(1889)
+
+generar_aleatorizacion_estratificada <- function(n_placebo, n_tratamiento, estratos, tratamientos, n_centros = 1) {
+  n_total_por_estrato <- n_placebo + n_tratamiento
+  resultados_conteo <- list()
+  secuencias_por_estrato <- list()
+
+  for (estrato in estratos) {
+    conteo_estrato <- data.frame(
+      Estrato = estrato,
+      Placebo = 0,
+      Tratamiento = 0
+    )
+    secuencia_lista_completa <- character(0)
+
+    for (i in 1:n_centros) {
+      # Definir los parámetros para la aleatorización por bloques
+      par_adaptado <- rpbrPar(
+        N = n_total_por_estrato,
+        rb = c(4),
+        K = length(tratamientos),
+        ratio = c(1, 3),
+        groups = tratamientos,
+        filledBlock = FALSE
+      )
+
+      # Generar la secuencia de aleatorización
+      set.seed(2850 + i + which(estratos == estrato) * 10)
+      secuencia_objeto <- genSeq(par_adaptado, 1)
+      secuencia_lista <- getRandList(secuencia_objeto)
+      secuencia_lista_completa <- c(secuencia_lista_completa, secuencia_lista)
+
+      # Contar las ocurrencias de cada tratamiento
+      conteo_placebo <- sum(secuencia_lista == "Placebo")
+      conteo_tratamiento <- sum(secuencia_lista == "Tratamiento")
+
+      # Acumular los conteos por estrato
+      conteo_estrato$Placebo <- conteo_estrato$Placebo + conteo_placebo
+      conteo_estrato$Tratamiento <- conteo_estrato$Tratamiento + conteo_tratamiento
+    }
+    resultados_conteo[[estrato]] <- conteo_estrato
+
+    # Crear el data frame de la secuencia para este estrato
+    secuencia_df_estrato <- data.frame(Secuencia = secuencia_lista_completa)
+    colnames(secuencia_df_estrato) <- paste0(estrato, "-", 1:ncol(secuencia_df_estrato)) # Esto no es correcto para la estructura deseada
+
+    # La estructura correcta sería una fila por estrato con la secuencia como valores
+    secuencias_por_estrato[[estrato]] <- data.frame(t(secuencia_lista_completa))
+    colnames(secuencias_por_estrato[[estrato]]) <- paste0("Paciente", 1:length(secuencia_lista_completa))
+  }
+
+  # Combinar los resultados del conteo
+  tabla_distribucion <- do.call(rbind, resultados_conteo)
+
+  # Combinar las secuencias por estrato en un solo data frame
+  secuencia_aleatorizacion_final <- do.call(rbind, secuencias_por_estrato)
+  secuencia_aleatorizacion_final$Estrato <- names(secuencias_por_estrato) # Añadir la columna de estrato
+
+  # Reorganizar las columnas para que el estrato sea la primera
+  secuencia_aleatorizacion_final <- secuencia_aleatorizacion_final[, c("Estrato", setdiff(names(secuencia_aleatorizacion_final), "Estrato"))]
+
+
+  # Devolver una lista con la tabla y la secuencia
+  return(list(tabla_distribucion = tabla_distribucion, secuencia_aleatorizacion = secuencia_aleatorizacion_final))
+}
+
+# Ejecutar la función
+resultados_aleatorizacion <- generar_aleatorizacion_estratificada(
+  n_placebo = n_placebo,
+  n_tratamiento = n_tratamiento,
+  estratos = estratos,
+  tratamientos = tratamientos,
+  n_centros = n_centros
+)
+```
+
+
 
 ```{r}
-library(blockrand)
-library(writexl)
 
 ## Parámetros del estudio
-n_placebo <- 52          # Tamaño grupo placebo
-n_tratamiento <- 52 * 3  # Tamaño grupo tratamiento (3:1)
+n_placebo <- 58         # Tamaño grupo placebo
+n_tratamiento <- 58 * 3 # Tamaño grupo tratamiento (3:1)
 n_total <- n_placebo + n_tratamiento
 estratos <- c("18-64", "+65")  # Dos estratos de edad
 tratamientos <- c("Placebo", "Tratamiento")
+n_centros <- 1
 
+# # Imprimir la tabla de distribución
+# print("Tabla de Distribución por Tratamiento y Grupo Etario:")
+# print(resultados_aleatorizacion$tabla_distribucion)
+# 
+# # Imprimir la secuencia de aleatorización
+# print("\nSecuencia de Aleatorización Completa:")
+# print(resultados_aleatorizacion$secuencia_aleatorizacion)
+
+# Opcional: Guardar la secuencia en un archivo Excel
+write_xlsx(resultados_aleatorizacion$secuencia_aleatorizacion, 
+           path = "secuencia_aleatorizacion.xlsx")
+
+# Opcional: Guardar la tabla de distribución en un archivo Excel
+write_xlsx(resultados_aleatorizacion$tabla_distribucion, 
+           path = "tabla_distribucion.xlsx")
 ```
 
 
-
-```{r}
-library(writexl)
-## Aleatorización por centro: 
-## 200 pacientes por centro, 6 centros, 2 tratamientos, relación 1:1
-
-#Opción 1. library(blockrand) 
-
-library(blockrand)
-
-N <- 200                            #Tamaño de muestra por centro
-a <- 2                              #Cantidad de tratamientos
-tratam <- c("A","B")                #Nombre de los tratamientos
-
-opcion1=NULL
-for (i in 1:6) {
-  set.seed(1850+i)      # Se establece una semilla fija para 
-                        # reproducir siempre la misma secuencia
-                        # una semilla diferente para cada centro
-  
-  centro <- blockrand( n=N,num.levels=a,levels=tratam,
-                       block.sizes = c(2,3), #Esto indica cuantas veces aparece 
-                                             #cada tratamiento en un bloque. 
-                                             #aleatoriamente se asignan bloques 
-                                             #de tamaño 4 y 6
-                       id.prefix=paste0("Centro",i,"-")) 
-  
-  opcion1 <- rbind(opcion1,centro)
-}
-
-write_xlsx(opcion1, path="C:/Users/User/Desktop/Materias Facu/Bioestadística/2025/4. Aleatorización/opcion1.xls")
-
-
-
-#Opción 2. library(randomizeR)
-
-library(randomizeR)
-par<-rpbrPar(N=N,
-             rb=c(4,6),          #genera bloques aleatorios de tamaño 4 y 6
-             K = a,
-             ratio = rep(1, 2),
-             groups = tratam,
-             filledBlock = FALSE
-)  
-
-opcion2<-genSeq(par,6)
-
-secuencia<-as.data.frame(getRandList(opcion2))      #Lista de la secuencia
-
-write_xlsx(secuencia, path="C:/Users/User/Desktop/Materias Facu/Bioestadística/2025/4. Aleatorización/opcion2.xls")
-```
 
