@@ -15,12 +15,11 @@ editor_options:
 
 \thispagestyle{empty}
 
-```{=tex}
 \begin{center}
   \vspace*{1cm}
 
   \Huge
-  \textbf{TP 1: Validación de datos}
+  \textbf{TP 2: Lectura Crítica de un Ensayo Clínico}
 
   \vspace{0.5cm}
   \LARGE
@@ -31,7 +30,7 @@ editor_options:
 
   \vfill
 
-  \includegraphics[width=0.9\textwidth]{tp1/img/logo_universidad}
+  \includegraphics[width=0.9\textwidth]{img/logo_universidad.jpg}
 
   \vspace{0.8cm}
 
@@ -40,7 +39,7 @@ editor_options:
 
   6 de Mayo de 2025
 \end{center}
-```
+
 \newpage
 
 # Autor principal y afiliación
@@ -66,7 +65,7 @@ Se trata de un ensayo en fase 3, es decir, un ensayo con el objetivo principal d
 ## Hipótesis estadística
 
 La hipótesis principal del estudio se basó en la superioridad de la vacuna en términos de inmunogenicidad, no en equivalencia.
-El criterio principal fue la proporción de participantes que alcanzaron niveles seroprotectores de anticuerpos (definidos como μPRNT50 mayor o igual a 150) a los 28 días después de la vacunación.
+El criterio principal fue la proporción de participantes que alcanzaron niveles seroprotectores de anticuerpos (definidos como $\mu PRNT50$ mayor o igual a 150) a los 28 días después de la vacunación.
 
 ## Enmascaramiento
 
@@ -125,10 +124,10 @@ Los participantes fueron monitoreados para síntomas compatibles con un evento a
 Síntomas que duraban 3 días o más se monitorearon como eventos adversos de especial interés (AESI).
 Los eventos que cumplían criterios de gravedad se reportaron como eventos adversos graves (SAE).
 Un Comité Independiente de Monitoreo de Datos de Seguridad (DSMB) revisó regularmente la información de seguridad acumulada hasta que el último participante completó la visita final (día 180).
-La respuesta inmune se midió mediante anticuerpos neutralizantes específicos para el virus chikungunya utilizando un ensayo de neutralización de reducción de placa con micropozo (μPRNT) validado.
-Se definió seroconversión para participantes negativos al inicio como un μPRNT50 ≥20, y para participantes positivos como un aumento de al menos 4 veces respecto al valor basal.
-La seroprotección se definió como un μPRNT50 ≥150.
-Las muestras negativas (μPRNT50 \<20) se imputaron como 10.
+La respuesta inmune se midió mediante anticuerpos neutralizantes específicos para el virus chikungunya utilizando un ensayo de neutralización de reducción de placa con micropozo (uPRNT) validado.
+Se definió seroconversión para participantes negativos al inicio como un $\mu PRNT50 \geq 20$, y para participantes positivos como un aumento de al menos 4 veces respecto al valor basal.
+La seroprotección se definió como un $\mu PRNT50 \geq 150$.
+Las muestras negativas ( $\mu PRNT50 < 20$) se imputaron como 10.
 
 ## Resultados principales
 
@@ -136,11 +135,11 @@ En términos de inmunogenicidad, el 98.9% (263 de 266) de los participantes que 
 No se observó una diferencia significativa en la tasa de seroprotección entre los pacientes de 18 a 64 años (204 [98,6%] de 207 participantes) y los de 65 años o más (59 [100%] de 59 participantes).
 Los títulos de anticuerpos neutralizantes específicos contra el virus del chikungunya mostraron un aumento de 471 veces en comparación con el valor basal en el día 29, y se mantuvieron con un aumento de 107 veces en el día 180 respecto al valor basal.
 
-Hasta el día 180 después de la vacunación, los eventos adversos se reportaron con mayor frecuencia en el grupo de VLA1553 que en el grupo placebo (1926 [62,5%] de 3082 vs 463 [44,8%] de 1033 participantes; p\<0,0001).
-Un total de 1575 (51,1%) de 3082 participantes del grupo VLA1553 y 322 (31,2%) de 1033 participantes del grupo placebo experimentaron al menos un evento adverso considerado relacionado con la vacunación (p\<0,0001) En cuanto a seguridad, se reportaron eventos adversos graves en el 1.5% de los vacunados frente al 0.8% en el grupo placebo.
+Hasta el día 180 después de la vacunación, los eventos adversos se reportaron con mayor frecuencia en el grupo de VLA1553 que en el grupo placebo (1926 [62,5%] de 3082 vs 463 [44,8%] de 1033 participantes; $p < 0,0001$).
+Un total de 1575 (51,1%) de 3082 participantes del grupo VLA1553 y 322 (31,2%) de 1033 participantes del grupo placebo experimentaron al menos un evento adverso considerado relacionado con la vacunación ($p < 0,0001$) En cuanto a seguridad, se reportaron eventos adversos graves en el 1.5% de los vacunados frente al 0.8% en el grupo placebo.
 Solo dos de estos eventos se consideraron relacionados con la vacuna (un caso de mialgia leve y otro de SIADH), ambos resueltos sin secuelas.
 
-![resultados](placebo.jpeg)
+![resultados](img/placebo.jpeg)
 
 # Validación externa e interna
 
@@ -174,7 +173,13 @@ Para una evaluación definitiva, serían ideales estudios de fase 4 en condicion
 
 ## Cálculo del tamaño de muestra
 
-$\alpha=0.05$ $p_{tratamiento}=0.7$ $p_{placebo}=$ $\beta=$
+$\alpha=0.05$ 
+
+$p_{tratamiento}=0.7$ 
+
+$p_{placebo}=0.4$ 
+
+$\beta= 0.1$
 
 ```{r include=FALSE}
 alpha=0.05      #Nivel de significacion
@@ -259,7 +264,8 @@ Además el objetivo principal del estudio es el análisis de la seroprotección 
 ```{r echo=TRUE}
 library(blockrand)
 library(randomizeR)
-
+library(writexl)
+imprimir_excel= FALSE
 set.seed(1889)
 
 generar_aleatorizacion_estratificada <- function(n_placebo, n_tratamiento, estratos, tratamientos, n_centros = 1) {
@@ -326,14 +332,7 @@ generar_aleatorizacion_estratificada <- function(n_placebo, n_tratamiento, estra
   return(list(tabla_distribucion = tabla_distribucion, secuencia_aleatorizacion = secuencia_aleatorizacion_final))
 }
 
-# Ejecutar la función
-resultados_aleatorizacion <- generar_aleatorizacion_estratificada(
-  n_placebo = n_placebo,
-  n_tratamiento = n_tratamiento,
-  estratos = estratos,
-  tratamientos = tratamientos,
-  n_centros = n_centros
-)
+
 ```
 
 ```{r}
@@ -346,6 +345,15 @@ estratos <- c("18-64", "+65")  # Dos estratos de edad
 tratamientos <- c("Placebo", "Tratamiento")
 n_centros <- 1
 
+# Ejecutar la función
+resultados_aleatorizacion <- generar_aleatorizacion_estratificada(
+  n_placebo = n_placebo,
+  n_tratamiento = n_tratamiento,
+  estratos = estratos,
+  tratamientos = tratamientos,
+  n_centros = n_centros
+)
+
 # # Imprimir la tabla de distribución
 # print("Tabla de Distribución por Tratamiento y Grupo Etario:")
 # print(resultados_aleatorizacion$tabla_distribucion)
@@ -354,18 +362,20 @@ n_centros <- 1
 # print("\nSecuencia de Aleatorización Completa:")
 # print(resultados_aleatorizacion$secuencia_aleatorizacion)
 
-# Opcional: Guardar la secuencia en un archivo Excel
-write_xlsx(resultados_aleatorizacion$secuencia_aleatorizacion, 
-           path = "secuencia_aleatorizacion.xlsx")
+if(imprimir_excel)
+  # Opcional: Guardar la secuencia en un archivo Excel
+  write_xlsx(resultados_aleatorizacion$secuencia_aleatorizacion, 
+             path = "secuencia_aleatorizacion.xlsx")
 
-# Opcional: Guardar la tabla de distribución en un archivo Excel
-write_xlsx(resultados_aleatorizacion$tabla_distribucion, 
-           path = "tabla_distribucion.xlsx")
+  # Opcional: Guardar la tabla de distribución en un archivo Excel
+  write_xlsx(resultados_aleatorizacion$tabla_distribucion, 
+             path = "tabla_distribucion.xlsx")
 ```
 
 ## Análisis estadístico
 
-Ya que el tamaño de muestra es lo suficientemente grande, se puede realizar la aproximación Normal de la Binomial para realizar un test Z. En este se desea comparar dos proporciones, p1 y p2 , observadas en dos grupos distintos de tamaños n1 y n2 , respectivamente.
+Ya que el tamaño de muestra es lo suficientemente grande, se puede realizar la aproximación Normal de la Binomial para realizar un test Z.
+En este se desea comparar dos proporciones, p1 y p2 , observadas en dos grupos distintos de tamaños n1 y n2 , respectivamente.
 
 -   $H_0)$ $p_{tratamiento}=p_{placebo}$
 
@@ -381,6 +391,6 @@ El estadístico Z sigue una distribución Normal (0, 1).
 
 **Regla de decisión:**
 
-Rechazar H₀ si $p-value < \alpha$ 
+Rechazar $H_0$ si $p-value < \alpha$
 
-La ventaja de este test es que se puede calcular un intervalo de confianza $(p1-p2 ) Z* EED$  donde EED corresponde al error estándar de la diferencia de proporciones como se calcula en la fórmula anterior.
+La ventaja de este test es que se puede calcular un intervalo de confianza $(p1-p2 ) Z* EED$ donde EED corresponde al error estándar de la diferencia de proporciones como se calcula en la fórmula anterior.
