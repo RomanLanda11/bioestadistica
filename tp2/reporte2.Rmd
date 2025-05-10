@@ -8,10 +8,14 @@ toc-title: Contenido
 execute:
   warning: false
   message: false
+editor_options: 
+  markdown: 
+    wrap: sentence
 ---
 
 \thispagestyle{empty}
 
+```{=tex}
 \begin{center}
   \vspace*{1cm}
 
@@ -36,14 +40,12 @@ execute:
 
   6 de Mayo de 2025
 \end{center}
-
+```
 \newpage
-
 
 # Autor principal y afiliación
 
 El artículo titulado “Safety and immunogenicity of a single-shot live-attenuated chikungunya vaccine: a double-blind, multicentre, randomised, placebo-controlled, phase 3 trial” fue escrito por la compañía de biotecnología Valneva Austria, ubicada en Vienna, Austria, en colaboración con el instituto de investigaciones Assign Data Management and Biostatistics, Innsbruck, Austria.
-
 
 # Revista y referencia bibliográfica
 
@@ -53,7 +55,9 @@ El artículo fue publicado en la revista The Lancet en el año 2023 (DOI: 10.101
 
 ## Tipo de estudio
 
-El estudio fue diseñado como un ensayo clínico aleatorizado, controlado con placebo y de grupos paralelos. Esto significa que los participantes fueron asignados al azar a dos grupos,  algunos recibieron la vacuna experimental (VLA1553) y otros un placebo. Luego se los siguió a lo largo del tiempo para comparar estos dos grupos independientes.
+El estudio fue diseñado como un ensayo clínico aleatorizado, controlado con placebo y de grupos paralelos.
+Esto significa que los participantes fueron asignados al azar a dos grupos, algunos recibieron la vacuna experimental (VLA1553) y otros un placebo.
+Luego se los siguió a lo largo del tiempo para comparar estos dos grupos independientes.
 
 ## Fase del estudio
 
@@ -61,24 +65,29 @@ Se trata de un ensayo en fase 3, es decir, un ensayo con el objetivo principal d
 
 ## Hipótesis estadística
 
-La hipótesis principal del estudio se basó en la superioridad de la vacuna en términos de inmunogenicidad, no en equivalencia. El criterio principal fue la proporción de participantes que alcanzaron niveles seroprotectores de anticuerpos (definidos como μPRNT50 mayor o igual a 150) a los 28 días después de la vacunación.
+La hipótesis principal del estudio se basó en la superioridad de la vacuna en términos de inmunogenicidad, no en equivalencia.
+El criterio principal fue la proporción de participantes que alcanzaron niveles seroprotectores de anticuerpos (definidos como μPRNT50 mayor o igual a 150) a los 28 días después de la vacunación.
 
 ## Enmascaramiento
 
 El estudio se realizó bajo un esquema de doble ciego, ni los participantes ni los investigadores que realizaban las evaluaciones sabían quién recibió la vacuna y quién recibió el placebo.
-Unidad de aleatorización
-La aleatorización se realizó a nivel individual en una proporción 3 a 1, es decir, tres participantes recibieron la vacuna por cada uno que recibió placebo.
-La aleatorización se realizó mediante un sistema de respuesta interactiva o sistema interactivo web (IXRS). Cada participante recibió un número de selección único a través del IXRS en la visita de selección, y fue asignado al tratamiento en la visita 1 (día 1). El personal del estudio no enmascarado preparó la vacuna de acuerdo a la información de IXRS, y las jeringas se enmascararon para ocultar el contenido antes de la administración.
+Unidad de aleatorización La aleatorización se realizó a nivel individual en una proporción 3 a 1, es decir, tres participantes recibieron la vacuna por cada uno que recibió placebo.
+La aleatorización se realizó mediante un sistema de respuesta interactiva o sistema interactivo web (IXRS).
+Cada participante recibió un número de selección único a través del IXRS en la visita de selección, y fue asignado al tratamiento en la visita 1 (día 1).
+El personal del estudio no enmascarado preparó la vacuna de acuerdo a la información de IXRS, y las jeringas se enmascararon para ocultar el contenido antes de la administración.
 
 ## Población
 
-Los participantes elegibles eran voluntarios sanos de 18 años o más. Se excluyeron aquellos con antecedentes de infección por virus de chikungunya, artritis o artralgia inmunomediada o crónica, defectos conocidos o sospechados del sistema inmunológico. Los participantes fueron estratificados por edad (estrato A: 18–64 años; estrato B: 65 años o más). 
-Entre los criterios de exclusión se encontraban haber recibido una vacuna inactivada dentro de las 2 semanas anteriores o una vacuna viva dentro de las 4 semanas previas a la vacunación con VLA1553. 
+Los participantes elegibles eran voluntarios sanos de 18 años o más.
+Se excluyeron aquellos con antecedentes de infección por virus de chikungunya, artritis o artralgia inmunomediada o crónica, defectos conocidos o sospechados del sistema inmunológico.
+Los participantes fueron estratificados por edad (estrato A: 18–64 años; estrato B: 65 años o más).
+Entre los criterios de exclusión se encontraban haber recibido una vacuna inactivada dentro de las 2 semanas anteriores o una vacuna viva dentro de las 4 semanas previas a la vacunación con VLA1553.
 El ensayo fue multicéntrico, llevado a cabo en 43 centros de Estados Unidos.
 
 ## Aprobaciones regulatorias y consentimiento informado
 
-El estudio fue aprobado por el Chesapeake IRB (número de aprobación Pro00045587, fechado el 6 de agosto de 2020). Todos los participantes proporcionaron consentimiento informado por escrito antes de realizar procedimientos del estudio.
+El estudio fue aprobado por el Chesapeake IRB (número de aprobación Pro00045587, fechado el 6 de agosto de 2020).
+Todos los participantes proporcionaron consentimiento informado por escrito antes de realizar procedimientos del estudio.
 
 ## Registro del protocolo
 
@@ -89,64 +98,83 @@ El ensayo fue registrado previamente en ClinicalTrials.gov con el identificador 
 ### Tamaño de muestra
 
 El tamaño muestral fue calculado para detectar al menos un evento poco frecuente (incidencia 1/1000) con 95% de probabilidad.
-El subconjunto de inmunogenicidad de 375 vacunados con VLA1553 se calculó para garantizar suficiente poder estadístico con un test binomial exacto unilateral (significancia del 2,5%) contra un umbral de no aceptación del 70% en la proporción de seroprotección. Se asumió una tasa de seroprotección del 80% basándose en resultados previos. Se necesitaban 225 vacunados con VLA1553 considerando una tasa de abandono del 10%. Finalmente, se reclutaron 501 participantes para equilibrar ambos estratos de edad y para seguimiento a largo plazo.
+El subconjunto de inmunogenicidad de 375 vacunados con VLA1553 se calculó para garantizar suficiente poder estadístico con un test binomial exacto unilateral (significancia del 2,5%) contra un umbral de no aceptación del 70% en la proporción de seroprotección.
+Se asumió una tasa de seroprotección del 80% basándose en resultados previos.
+Se necesitaban 225 vacunados con VLA1553 considerando una tasa de abandono del 10%.
+Finalmente, se reclutaron 501 participantes para equilibrar ambos estratos de edad y para seguimiento a largo plazo.
 
 ### Metodología Estadística
 
-El análisis primario comparó la proporción observada de seroprotección a los 28 días contra el umbral del 70%, aplicando un test binomial exacto y calculando IC del 95% (Clopper-Pearson). También se compararon los grupos de tratamiento mediante test exacto de Fisher para seroprotección y seroconversión. El título medio geométrico (GMT) de anticuerpos se comparó mediante un modelo de ANCOVA incluyendo grupo de tratamiento y estrato de edad como factores.
-Todos los participantes vacunados en el día 1 se incluyeron en la población de seguridad. Para inmunogenicidad, se incluyeron los vacunados seronegativos basales del subconjunto de inmunogenicidad, sin violaciones mayores de protocolo. También se realizaron análisis de sensibilidad.
+El análisis primario comparó la proporción observada de seroprotección a los 28 días contra el umbral del 70%, aplicando un test binomial exacto y calculando IC del 95% (Clopper-Pearson).
+También se compararon los grupos de tratamiento mediante test exacto de Fisher para seroprotección y seroconversión.
+El título medio geométrico (GMT) de anticuerpos se comparó mediante un modelo de ANCOVA incluyendo grupo de tratamiento y estrato de edad como factores.
+Todos los participantes vacunados en el día 1 se incluyeron en la población de seguridad.
+Para inmunogenicidad, se incluyeron los vacunados seronegativos basales del subconjunto de inmunogenicidad, sin violaciones mayores de protocolo.
+También se realizaron análisis de sensibilidad.
 
 ### Procedimiento
 
-El análisis principal se realizó por protocolo, es decir, se excluyó a los participantes que no completaron estrictamente el protocolo. Incluyó a 362 participantes, 266 en el grupo de la vacuna y 96 en el grupo placebo. Además, se excluyeron los participantes que abandonaron el estudio antes de su finalización.
-Los participantes recibieron una única vacunación intramuscular en la región deltoidea el día 1. Se realizaron visitas de seguimiento para evaluar seguridad e inmunogenicidad a los 7, 28, 84 (3 meses) y 179 días (6 meses) tras la vacunación. Se extrajo sangre para evaluar química clínica, panel de coagulación y hematología (seguridad), y ensayos de neutralización (inmunogenicidad). Las muestras de laboratorio de seguridad se analizaron al inicio para todos los participantes, y para el subconjunto de inmunogenicidad también en visitas posteriores.
-Los participantes fueron monitoreados para síntomas compatibles con un evento agudo relacionado al chikungunya (fiebre súbita con artralgia, dolor de espalda, síntomas neurológicos, cardíacos, rash o edema) hasta 21 días después de la vacunación. Síntomas que duraban 3 días o más se monitorearon como eventos adversos de especial interés (AESI). Los eventos que cumplían criterios de gravedad se reportaron como eventos adversos graves (SAE). Un Comité Independiente de Monitoreo de Datos de Seguridad (DSMB) revisó regularmente la información de seguridad acumulada hasta que el último participante completó la visita final (día 180).
+El análisis principal se realizó por protocolo, es decir, se excluyó a los participantes que no completaron estrictamente el protocolo.
+Incluyó a 362 participantes, 266 en el grupo de la vacuna y 96 en el grupo placebo.
+Además, se excluyeron los participantes que abandonaron el estudio antes de su finalización.
+Los participantes recibieron una única vacunación intramuscular en la región deltoidea el día 1.
+Se realizaron visitas de seguimiento para evaluar seguridad e inmunogenicidad a los 7, 28, 84 (3 meses) y 179 días (6 meses) tras la vacunación.
+Se extrajo sangre para evaluar química clínica, panel de coagulación y hematología (seguridad), y ensayos de neutralización (inmunogenicidad).
+Las muestras de laboratorio de seguridad se analizaron al inicio para todos los participantes, y para el subconjunto de inmunogenicidad también en visitas posteriores.
+Los participantes fueron monitoreados para síntomas compatibles con un evento agudo relacionado al chikungunya (fiebre súbita con artralgia, dolor de espalda, síntomas neurológicos, cardíacos, rash o edema) hasta 21 días después de la vacunación.
+Síntomas que duraban 3 días o más se monitorearon como eventos adversos de especial interés (AESI).
+Los eventos que cumplían criterios de gravedad se reportaron como eventos adversos graves (SAE).
+Un Comité Independiente de Monitoreo de Datos de Seguridad (DSMB) revisó regularmente la información de seguridad acumulada hasta que el último participante completó la visita final (día 180).
 La respuesta inmune se midió mediante anticuerpos neutralizantes específicos para el virus chikungunya utilizando un ensayo de neutralización de reducción de placa con micropozo (μPRNT) validado.
-Se definió seroconversión para participantes negativos al inicio como un μPRNT50 ≥20, y para participantes positivos como un aumento de al menos 4 veces respecto al valor basal. La seroprotección se definió como un μPRNT50 ≥150. Las muestras negativas (μPRNT50 <20) se imputaron como 10.
+Se definió seroconversión para participantes negativos al inicio como un μPRNT50 ≥20, y para participantes positivos como un aumento de al menos 4 veces respecto al valor basal.
+La seroprotección se definió como un μPRNT50 ≥150.
+Las muestras negativas (μPRNT50 \<20) se imputaron como 10.
 
 ## Resultados principales
 
-En términos de inmunogenicidad, el 98.9% (263 de 266) de los participantes que recibieron la vacuna alcanzaron niveles seroprotectores de anticuerpos a los 28 días, con un intervalo de confianza del 95% entre 96.7% y 99.8%. No se observó una diferencia significativa en la tasa de seroprotección entre los pacientes de 18 a 64 años (204 [98,6%] de 207 participantes) y los de 65 años o más (59 [100%] de 59 participantes).
+En términos de inmunogenicidad, el 98.9% (263 de 266) de los participantes que recibieron la vacuna alcanzaron niveles seroprotectores de anticuerpos a los 28 días, con un intervalo de confianza del 95% entre 96.7% y 99.8%.
+No se observó una diferencia significativa en la tasa de seroprotección entre los pacientes de 18 a 64 años (204 [98,6%] de 207 participantes) y los de 65 años o más (59 [100%] de 59 participantes).
 Los títulos de anticuerpos neutralizantes específicos contra el virus del chikungunya mostraron un aumento de 471 veces en comparación con el valor basal en el día 29, y se mantuvieron con un aumento de 107 veces en el día 180 respecto al valor basal.
 
-Hasta el día 180 después de la vacunación, los eventos adversos se reportaron con mayor frecuencia en el grupo de VLA1553 que en el grupo placebo (1926 [62,5%] de 3082 vs 463 [44,8%] de 1033 participantes; p<0,0001).
-Un total de 1575 (51,1%) de 3082 participantes del grupo VLA1553 y 322 (31,2%) de 1033 participantes del grupo placebo experimentaron al menos un evento adverso considerado relacionado con la vacunación (p<0,0001)
-En cuanto a seguridad, se reportaron eventos adversos graves en el 1.5% de los vacunados frente al 0.8% en el grupo placebo. Solo dos de estos eventos se consideraron relacionados con la vacuna (un caso de mialgia leve y otro de SIADH), ambos resueltos sin secuelas.
+Hasta el día 180 después de la vacunación, los eventos adversos se reportaron con mayor frecuencia en el grupo de VLA1553 que en el grupo placebo (1926 [62,5%] de 3082 vs 463 [44,8%] de 1033 participantes; p\<0,0001).
+Un total de 1575 (51,1%) de 3082 participantes del grupo VLA1553 y 322 (31,2%) de 1033 participantes del grupo placebo experimentaron al menos un evento adverso considerado relacionado con la vacunación (p\<0,0001) En cuanto a seguridad, se reportaron eventos adversos graves en el 1.5% de los vacunados frente al 0.8% en el grupo placebo.
+Solo dos de estos eventos se consideraron relacionados con la vacuna (un caso de mialgia leve y otro de SIADH), ambos resueltos sin secuelas.
 
 ![resultados](placebo.jpeg)
 
 # Validación externa e interna
 
-Este estudio tuvo varias limitaciones. Primero, el estudio no se realizó en una región endémica, por lo que se desconoce el efecto de la inmunidad preexistente sobre la inmunogenicidad de VLA1553, así como el perfil completo de seguridad en esta población. 
-Segundo, la vacuna se basa en una plataforma de virus vivo atenuado y, por tanto, probablemente no sea utilizable en personas con inmunosupresión severa; cualquier uso durante el embarazo deberá sopesar los riesgos graves para los recién nacidos por la transmisión perinatal del chikunguña frente a la práctica general de evitar o contraindicar las vacunas de virus vivo atenuado durante el embarazo. Tanto las personas embarazadas como las gravemente inmunocomprometidas fueron excluidas del ensayo como medida de precaución. 
-Tercero, la inmunogenicidad se determinó en un subconjunto pequeño de participantes. Sin embargo, la población por protocolo analizada para los desenlaces de inmunogenicidad fue representativa de toda la población del estudio al comparar los datos demográficos.
-Cuarto, para ser altamente eficaz en el control de una enfermedad endémica, una vacuna contra el chikunguña también debe administrarse a niños 
+Este estudio tuvo varias limitaciones.
+Primero, el estudio no se realizó en una región endémica, por lo que se desconoce el efecto de la inmunidad preexistente sobre la inmunogenicidad de VLA1553, así como el perfil completo de seguridad en esta población.
+Segundo, la vacuna se basa en una plataforma de virus vivo atenuado y, por tanto, probablemente no sea utilizable en personas con inmunosupresión severa; cualquier uso durante el embarazo deberá sopesar los riesgos graves para los recién nacidos por la transmisión perinatal del chikunguña frente a la práctica general de evitar o contraindicar las vacunas de virus vivo atenuado durante el embarazo.
+Tanto las personas embarazadas como las gravemente inmunocomprometidas fueron excluidas del ensayo como medida de precaución.
+Tercero, la inmunogenicidad se determinó en un subconjunto pequeño de participantes.
+Sin embargo, la población por protocolo analizada para los desenlaces de inmunogenicidad fue representativa de toda la población del estudio al comparar los datos demográficos.
+Cuarto, para ser altamente eficaz en el control de una enfermedad endémica, una vacuna contra el chikunguña también debe administrarse a niños
 
-El estudio tiene validez interna sólida  porque cumple con las siguientes consideraciones que deben tener los ensayos clínicos:
+El estudio tiene validez interna sólida porque cumple con las siguientes consideraciones que deben tener los ensayos clínicos:
 
- * Correcta aleatorización
- 
- * Enmascaramiento (en este caso doble ciego)
- 
- * Cumple con las buenas prácticas médicas
- 
- * Los pacientes firman el consentimiento informado
- 
- * Las definiciones de los eventos están bien explícitas
- 
- * Existe un comité de ética
- 
-Pero, por lo mencionado anteriormente la validez externa es criticable, dado que los resultados son aplicables a poblaciones sanas. Se necesitan más datos en contextos endémicos y grupos vulnerables.
+-   Correcta aleatorización
+
+-   Enmascaramiento (en este caso doble ciego)
+
+-   Cumple con las buenas prácticas médicas
+
+-   Los pacientes firman el consentimiento informado
+
+-   Las definiciones de los eventos están bien explícitas
+
+-   Existe un comité de ética
+
+Pero, por lo mencionado anteriormente la validez externa es criticable, dado que los resultados son aplicables a poblaciones sanas.
+Se necesitan más datos en contextos endémicos y grupos vulnerables.
 Para una evaluación definitiva, serían ideales estudios de fase 4 en condiciones reales.
 
-
+# Propuesta nuevo ensayo
 
 ## Cálculo del tamaño de muestra
 
-$\alpha=0.05$
-$p_{tratamiento}=0.7$
-$p_{placebo}=$
-$\beta=$
+$\alpha=0.05$ $p_{tratamiento}=0.7$ $p_{placebo}=$ $\beta=$
 
 ```{r include=FALSE}
 alpha=0.05      #Nivel de significacion
@@ -168,7 +196,6 @@ n_trat = n_placebo*3
 n_total=n_trat+n_placebo
 
 ```
-
 
 ```{r echo=FALSE}
 # Parámetros fijos
@@ -221,8 +248,13 @@ ggplot(resultados, aes(x = p_placebo, y = Tamaño, color = as.factor(Potencia)))
 #library(knitr)
 #kable(resultados, caption = "Resultados detallados")
 ```
-Tamaño elegido: $58$ placebos y $58 . 3 = 174$ tratamientos
-Total $232$
+
+Tamaño elegido: $58$ placebos y $58 . 3 = 174$ tratamientos Total $232$
+
+Si bien en el ensayo clínico plantea más análisis y deberíamos calcular el temaño de muestra también para los otros, no tenemos los datos suficientes para hacerlo.
+Además el objetivo principal del estudio es el análisis de la seroprotección por lo que decidimos presentar los tamaños de muestra solo para esto.
+
+## Aleatorización
 
 ```{r echo=TRUE}
 library(blockrand)
@@ -304,8 +336,6 @@ resultados_aleatorizacion <- generar_aleatorizacion_estratificada(
 )
 ```
 
-
-
 ```{r}
 
 ## Parámetros del estudio
@@ -333,5 +363,24 @@ write_xlsx(resultados_aleatorizacion$tabla_distribucion,
            path = "tabla_distribucion.xlsx")
 ```
 
+## Análisis estadístico
 
+Ya que el tamaño de muestra es lo suficientemente grande, se puede realizar la aproximación Normal de la Binomial para realizar un test Z. En este se desea comparar dos proporciones, p1 y p2 , observadas en dos grupos distintos de tamaños n1 y n2 , respectivamente.
 
+-   $H_0)$ $p_{tratamiento}=p_{placebo}$
+
+-   $H_1)$ $p_{tratamiento} > p_{placebo}$
+
+**Estadística:**
+
+$$
+Z = \frac{p_1 - p_2}{EED} = \frac{p_1 - p_2}{\sqrt{\frac{p_1 (1 - p_1)}{n_1} + \frac{p_2 (1 - p_2)}{n_2}}}
+$$
+
+El estadístico Z sigue una distribución Normal (0, 1).
+
+**Regla de decisión:**
+
+Rechazar H₀ si $p-value < \alpha$ 
+
+La ventaja de este test es que se puede calcular un intervalo de confianza $(p1-p2 ) Z* EED$  donde EED corresponde al error estándar de la diferencia de proporciones como se calcula en la fórmula anterior.
