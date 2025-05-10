@@ -149,22 +149,23 @@ $p_{placebo}=$
 $\beta=$
 
 ```{r}
-alpha=0.05
-p_trat=0.7
-beta=0.1
-p_placebo=0.3
+alpha=0.05      #Nivel de significacion
+p_trat=0.7      #Proporcion de seroproteccion
+beta=0.1        #1-Potencia
+p_placebo=0.3    
 z_alpha2=qnorm(alpha/2)
 z_beta=qnorm(beta)
-R_0=0.1
+R_0=0.1         #tasa de abandono
 
 # Fórmula
-dif_z=
 
 n=((z_alpha2+z_beta)^2)*(p_trat*(1-p_trat)+p_placebo*(1-p_placebo))/(p_placebo-p_trat)^2
 
 # Ajuste por pérdida de seguimiento
 
-n2=n*(1+R_0)
+n_trat=n*(1+R_0)
+n_placebo = n_trat*3
+n_total=n_trat+n_placebo
 
 ```
 ```{r}
@@ -218,6 +219,22 @@ ggplot(resultados, aes(x = p_placebo, y = Tamaño, color = as.factor(Potencia)))
 library(knitr)
 kable(resultados, caption = "Resultados detallados")
 ```
+Tamaño elegido: 52 placebos y 52*3=156 tratamientos
+total 208
+
+```{r}
+library(blockrand)
+library(writexl)
+
+## Parámetros del estudio
+n_placebo <- 52          # Tamaño grupo placebo
+n_tratamiento <- 52 * 3  # Tamaño grupo tratamiento (3:1)
+n_total <- n_placebo + n_tratamiento
+estratos <- c("18-64", "+65")  # Dos estratos de edad
+tratamientos <- c("Placebo", "Tratamiento")
+
+```
+
 
 
 ```{r}
