@@ -173,14 +173,15 @@ Para una evaluación definitiva, serían ideales estudios de fase 4 en condicion
 
 ## Cálculo del tamaño de muestra
 
-$\alpha=0.05$ 
+Se definen a continuación los valores utilizados en el artículo:
 
-$p_{tratamiento}=0.7$ 
+* Nivel de significación: $\alpha=0.05$ 
 
-$p_{placebo}=0.4$ 
+* Proporción de seroprotección en el grupo tratado con la vacuna: $p_{tratamiento}=0.7$ 
 
-$\beta= 0.1$
+* Tasa de abandono: $R_0=0.1$
 
+Teniendo en cuenta estos valores se calcula el tamaño de muestra para el grupo placebo para distintos valores de la proporción de seroprotección en el grupo placebo y distintas potencias: 
 ```{r include=FALSE}
 alpha=0.05      #Nivel de significacion
 p_trat=0.7      #Proporcion de seroproteccion
@@ -242,7 +243,7 @@ ggplot(resultados, aes(x = p_placebo, y = Tamaño, color = as.factor(Potencia)))
        color = "Potencia") +
   scale_x_continuous(breaks = p_placebo_range, labels = scales::percent(p_placebo_range)) +
   scale_y_continuous(breaks = pretty(resultados$Tamaño, n = 10)) +
-  scale_color_manual(values = c("0.7" = "#E41A1C", "0.8" = "#377EB8", "0.9" = "#4DAF4A"),
+  scale_color_manual(values = c("0.7" = "#BF00FA", "0.8" = "#2393FA", "0.9" = "#32F728"),
                      labels = c("70%", "80%", "90%")) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5, face = "bold"),
@@ -254,12 +255,14 @@ ggplot(resultados, aes(x = p_placebo, y = Tamaño, color = as.factor(Potencia)))
 #kable(resultados, caption = "Resultados detallados")
 ```
 
-Tamaño elegido: $58$ placebos y $58 . 3 = 174$ tratamientos Total $232$
+Seleccionamos una potencia del 90% y una proporción para el grupo placebo de 0.4. La elección de una potencia del 90% se debe a que se busca una alta probabilidad de detectar una diferencia real entre grupos, en caso de que exista, lo cual es especialmente relevante en estudios donde la seroprotección tiene importancia clínica. Por otro lado, la proporción de seroprotección del 40% en el grupo placebo se basa en la expectativa de una respuesta inmunológica baja en ausencia de intervención (vacuna), lo que permite detectar una diferencia clínicamente significativa frente al grupo tratado. Con esta combinación de parámetros se obtiene un tamaño de muestra de $58$ pacientes para el grupo placebo y $58 * 3 = 174$ para el grupo tratamiento, considerando una asignación (1:3). En total, se deberán reclutar $232$ pacientes.
 
 Si bien en el ensayo clínico plantea más análisis y deberíamos calcular el temaño de muestra también para los otros, no tenemos los datos suficientes para hacerlo.
-Además el objetivo principal del estudio es el análisis de la seroprotección por lo que decidimos presentar los tamaños de muestra solo para esto.
+Además el objetivo principal del estudio es el análisis de la seroprotección por lo que decidimos presentar los tamaños de muestra solo para este propósito.
 
 ## Aleatorización
+
+Una vez calculado el tamaño de muestra se necesita el patrón de aleatorización para llevar adelante el ensayo clínico.
 
 ```{r echo=TRUE}
 library(blockrand)
