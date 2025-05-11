@@ -182,7 +182,7 @@ Se definen a continuación los valores utilizados en el artículo:
 * Tasa de abandono: $R_0=0.1$
 
 Teniendo en cuenta estos valores se calcula el tamaño de muestra para el grupo placebo para distintos valores de la proporción de seroprotección en el grupo placebo y distintas potencias: 
-```{r include=FALSE}
+```{r warning=FALSE, include=FALSE}
 alpha=0.05      #Nivel de significacion
 p_trat=0.7      #Proporcion de seroproteccion
 beta=0.1        #1-Potencia
@@ -203,7 +203,7 @@ n_total=n_trat+n_placebo
 
 ```
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 # Parámetros fijos
 alpha <- 0.05
 p_trat <- 0.7      # Proporción fija en tratamiento
@@ -264,7 +264,8 @@ Además el objetivo principal del estudio es el análisis de la seroprotección 
 
 Una vez calculado el tamaño de muestra se necesita el patrón de aleatorización para llevar adelante el ensayo clínico.
 
-```{r echo=TRUE}
+```{r echo=TRUE, warning=FALSE, message=FALSE, results='hide'}
+
 library(blockrand)
 library(randomizeR)
 library(writexl)
