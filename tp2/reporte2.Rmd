@@ -70,7 +70,10 @@ El criterio principal fue la proporción de participantes que alcanzaron niveles
 ## Enmascaramiento
 
 El estudio se realizó bajo un esquema de doble ciego, ni los participantes ni los investigadores que realizaban las evaluaciones sabían quién recibió la vacuna y quién recibió el placebo.
-Unidad de aleatorización La aleatorización se realizó a nivel individual en una proporción 3 a 1, es decir, tres participantes recibieron la vacuna por cada uno que recibió placebo.
+
+## Unidad de aleatorización
+
+La aleatorización se realizó a nivel individual en una proporción 3 a 1, es decir, tres participantes recibieron la vacuna por cada uno que recibió placebo.
 La aleatorización se realizó mediante un sistema de respuesta interactiva o sistema interactivo web (IXRS).
 Cada participante recibió un número de selección único a través del IXRS en la visita de selección, y fue asignado al tratamiento en la visita 1 (día 1).
 El personal del estudio no enmascarado preparó la vacuna de acuerdo a la información de IXRS, y las jeringas se enmascararon para ocultar el contenido antes de la administración.
