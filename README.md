@@ -6,10 +6,14 @@ A repository for the subject Bioestadistica
 ```
 bioestadistica/
 │       
-└── tp1/
+├── tp1/
 │    ├── datos/
 │    ├── 
 │    └── script/
-│    
-└── tp2/
+│
+|
+├-- tp2/
+|
+|
+└── tp3/
 ```
