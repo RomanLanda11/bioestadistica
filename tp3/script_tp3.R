@@ -152,3 +152,31 @@ for (hoja in nombres_hojas) {
 }
 
 ######################### Estandarizacion de Tasas ###########################
+
+tasas_totales <- list()
+for (nombre_df_provincia in nombres_dfs_generados) {
+  provincia_df <- get(nombre_df_provincia, envir = .GlobalEnv)
+  
+  # Calcula la 'tasa_por_edad'
+  provincia_df <- provincia_df %>%
+    mutate(
+      tasa_por_edad = ifelse(
+        !is.na(`Ambos sexos`) & `Ambos sexos` != 0,
+        cuenta_total / `Ambos sexos`,
+        0 # O NA
+      )
+    )
+  
+  # Calcula la 'tasa_total' ponderada por fila
+  tasa_total_ponderada <- sum(
+    (provincia_df$tasa_por_edad * (provincia_df$`%poblacion` / 100)), # %poblacion / 100 
+    na.rm = TRUE # Importante para que la suma ignore los NA
+  )
+  
+  # Almacena la tasa total ponderada en la lista 'tasas_totales'
+  tasas_totales[[nombre_df_provincia]] <- tasa_total_ponderada
+  
+  # Asigna el data frame actualizado con 'tasa_por_edad' de nuevo al entorno global
+  assign(nombre_df_provincia, provincia_df, envir = .GlobalEnv)
+  cat("Calculada tasa total para", nombre_df_provincia, ":", tasa_total_ponderada, "\n")
+}
