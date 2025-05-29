@@ -151,9 +151,10 @@ for (hoja in nombres_hojas) {
   nombres_dfs_generados <- c(nombres_dfs_generados, nombre_limpio)
 }
 
-######################### Estandarizacion de Tasas ###########################
+######################### Metodo Directo Estandarizacion ###########################
 
 tasas_totales <- list()
+tasa_estandar_directo <- list()
 for (nombre_df_provincia in nombres_dfs_generados) {
   provincia_df <- get(nombre_df_provincia, envir = .GlobalEnv)
   
@@ -167,14 +168,19 @@ for (nombre_df_provincia in nombres_dfs_generados) {
       )
     )
   
+  provincia_df$defunciones_estandar <- provincia_df$tasa_por_edad*total_del_pais$`Ambos sexos`
+  
   # Calcula la 'tasa_total' ponderada por fila
   tasa_total_ponderada <- sum(
     (provincia_df$tasa_por_edad * (provincia_df$`%poblacion` / 100)), # %poblacion / 100 
     na.rm = TRUE # Importante para que la suma ignore los NA
   )
+  tasa_estandar <- sum((provincia_df$defunciones_estandar), na.rm = TRUE )/ sum(total_del_pais$`Ambos sexos`)
   
   # Almacena la tasa total ponderada en la lista 'tasas_totales'
   tasas_totales[[nombre_df_provincia]] <- tasa_total_ponderada
+  tasa_estandar_directo[[nombre_df_provincia]] <- tasa_estandar
+  
   
   # Asigna el data frame actualizado con 'tasa_por_edad' de nuevo al entorno global
   assign(nombre_df_provincia, provincia_df, envir = .GlobalEnv)
