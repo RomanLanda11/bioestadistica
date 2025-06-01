@@ -328,7 +328,11 @@ for (nombre_df_provincia in nombres_dfs_generados) {
 # print(rme_indirecta)
 ```
 
+\newpage
+
 # Resultados
+
+Nos parece importante comparar las tasas crudas y las estandarizadas ya que nos indican si la edad de cada provincia está distribuída parecida a la población Argentina. Por ejemplo:
 
 ```{r include=FALSE}
 library(tools)
@@ -357,7 +361,6 @@ df_resultados <- df_resultados %>%
 ```
 
 ```{r echo=FALSE}
-
 # --- 1. Pivotar el dataframe de resultados a formato largo ---
 df_tasas_long <- df_resultados %>%
   select(provincia, tasas_provinciales, tasas_estandar_directas) %>% # Seleccionamos solo las columnas de interés
@@ -388,13 +391,21 @@ tabla_para_mostrar <- df_resultados %>% # Usamos el df_resultados ya transformad
   )
 
 # Mostrar la tabla usando kable
-kable(tabla_para_mostrar, caption = " Tasas de Mortalidad por Provincia (por 1.000 habitantes)") %>%
+kable(tabla_para_mostrar, 
+      caption = " Tasas de Mortalidad por Provincia (por 1.000 habitantes)",
+      align = c("l", "c", "c")) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"), # Opciones de estilo Bootstrap
     full_width = FALSE, # La tabla no ocupa todo el ancho de la página
     position = "center") %>%  # Alinea la tabla a la izquierda
     row_spec(row = 0, background = "#4682B4", color = "black", extra_css = "font-weight: bold;")
+```
 
+ * Si la **Tasa Cruda > Tasa Estandarizada**, la provincia tiende a tener una población más envejecida que la población de referencia. Su tasa cruda parece alta, pero al ajustar por edad, su mortalidad es en realidad más baja de lo que la tasa cruda sugiere.
+ 
+ * Si la **Tasa Cruda < Tasa Estandarizada**, la provincia tiende a tener una población más joven que la población de referencia. Su tasa cruda parece baja, pero al ajustar por edad, su mortalidad es en realidad más alta de lo que la tasa cruda sugiere. 
+
+```{r echo=FALSE}
 # --- 2. Crear el gráfico con las dos barras por provincia ---
 ggplot(df_tasas_long) +
   aes(x = provincia, y = valor_tasa, fill = tipo_tasa) +
@@ -420,11 +431,7 @@ ggplot(df_tasas_long) +
   scale_y_continuous(labels = scales::number_format(scale = 1000, accuracy = 0.01))
 ```
 
-Nos parece importante comparar las tasas crudas y las estandarizadas ya que nos indican si la edad de cada provincia está distribuída parecida a la población Argentina. Por ejemplo:
 
- * Si la **Tasa Cruda > Tasa Estandarizada**, la provincia tiende a tener una población más envejecida que la población de referencia. Su tasa cruda parece alta, pero al ajustar por edad, su mortalidad es en realidad más baja de lo que la tasa cruda sugiere.
- 
- * Si la **Tasa Cruda < Tasa Estandarizada**, la provincia tiende a tener una población más joven que la población de referencia. Su tasa cruda parece baja, pero al ajustar por edad, su mortalidad es en realidad más alta de lo que la tasa cruda sugiere. 
  
 Particularmente llama la atención en el gráfico 1 es Misiones, ya que tiene una tasa estandarizada muy por arriba de su tasa cruda, ambas muy elevadas en comparación con otras provincias y la tasa de mortalidad de Argentina. Esto es una señal de alerta ya dicha provincia tiene una estructura de edad más joven que la población de referencia (o bien, presenta una alta proporción de población en edades de baja mortalidad), pero aún así presenta una mortalidad muy elevada. Esto sugiere que el riesgo de muerte allí es alto y no se debe al envejecimiento de la población. 
 
@@ -453,7 +460,9 @@ tabla_para_mostrar2 <- df_resultados %>% # Usamos el df_resultados ya transforma
     RME = rme
   ) 
 # Mostrar la tabla usando kable
-kable(tabla_para_mostrar2, caption = " Razones de Mortalidad Estandarizadas por Provincia") %>%
+kable(tabla_para_mostrar2, 
+      caption = " Razones de Mortalidad Estandarizadas por Provincia",
+      align = c("l", "c")) %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"), # Opciones de estilo Bootstrap
     full_width = FALSE, # La tabla no ocupa todo el ancho de la página
