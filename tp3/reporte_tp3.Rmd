@@ -44,12 +44,13 @@ editor_options:
 
 # Introducción
 
-### Estandarización de tasas
+## Estandarización de tasas
+
 La estandarización de tasas es una herramienta fundamental en epidemiología y demografía que permite comparar indicadores de salud entre poblaciones con estructuras demográficas diferentes. Este método ajusta las tasas crudas (por ejemplo, de mortalidad o morbilidad) para eliminar el efecto de, por ejemplo, la edad o el sexo, lo que facilita la identificación de patrones y desigualdades reales entre grupos o regiones.
 
 En este trabajo, se aplicará la estandarización de tasas para analizar las muertes por **infarto agudo de miocardio** durante el **año 2023** en las provincias de Argentina, utilizando como referencia la población estándar del país. A través de este proceso, se calcularán tasas estandarizadas por edad y las razones de mortalidad estándar (RME), lo que permitirá comparar el riesgo de muerte entre provincias de manera precisa.
 
-### Infarto agudo de miocardio
+## Infarto agudo de miocardio
 
 El infarto agudo de miocardio, comúnmente conocido como ataque al corazón, es una emergencia médica que ocurre cuando el flujo sanguíneo al corazón se bloquea, lo que priva al corazón de oxígeno y puede causar la muerte de las células cardíacas.
 Los síntomas incluyen rigidez o dolor en el pecho, el cuello, la espalda o los brazos, así como fatiga, mareos, ritmo cardíaco anormal y ansiedad.
@@ -58,11 +59,12 @@ Aunque cualquier persona puede sufrir un Infarto de Miocardio, no todas tienen e
 
 Dado que la edad es uno de los principales factores de riesgo, es fundamental tenerla en cuenta al comparar tasas de mortalidad por infarto entre distintas provincias. Por eso, en este análisis se realizará una estandarización por edad, lo cual permitirá una comparación más adecuada entre poblaciones con estructuras etarias diferentes.
 
-### Datos
+## Datos
 
-Para poder estandarizar las tasas de mortalidad, se requiere contar con el número de defunciones por infarto agudo de miocardio desagregado por provincia y grupo de edad. Esta información correspondiente al año 2023 fue obtenida de la página de la Dirección de Estadísticas e Información en Salud (DEIS): https://www.argentina.gob.ar/salud/deis.
+Para poder estandarizar las tasas de mortalidad, se requiere contar con el número de defunciones por infarto agudo de miocardio desagregado por provincia y grupo de edad. Esta información correspondiente al año 2023 fue obtenida de la página de la  [Dirección de Estadísticas e Información en Salud (DEIS)](https://www.argentina.gob.ar/salud/deis).
 
-Además, se necesitaba la población dividida por grupos de edad para cada provincia, así como para el total del país (utilizado como población estándar). Estos datos fueron descargados del sitio del Instituto Nacional de Estadística y Censos (INDEC), en la sección de Proyecciones y Estimaciones de Población: https://www.indec.gob.ar/indec/web/Nivel3-Tema-2-24.
+Además, se necesitaba la población dividida por grupos de edad para cada provincia, así como para el total del país (utilizado como población estándar). Estos datos fueron descargados del sitio del Instituto Nacional de Estadística y Censos (INDEC), en la sección de  [Proyecciones y Estimaciones de Población](https://www.indec.gob.ar/indec/web/Nivel3-Tema-2-24).
+
 
 ```{r include=FALSE}
 # Función de limpieza común para los grupos de edad
@@ -82,6 +84,8 @@ library(readr)
 library(stringr)
 library(dplyr)
 library(tidyr)
+library(ggplot2)
+library(kableExtra)
 ```
 
 ```{r include=FALSE}
@@ -132,11 +136,11 @@ nombres_hojas <- excel_sheets(ruta_archivo)
 nombres_hojas <- nombres_hojas[nombres_hojas != "GraphData"]
 ```
 
-# Estandarización Directa
+# Metodo de Estandarización Directa
 
 Para calcular las tasas de mortalidad estandarizadas utilizaremos el método directo de estandarización. Este consiste en en calcular las tasas brutas por grupos de edad para cada provincia y multiplicarla por la población estándar, en este caso la de Argentina.
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # Inicializar un vector para almacenar los nombres de los data frames generados
 nombres_dfs_generados <- c()
 
@@ -223,7 +227,7 @@ for (hoja in nombres_hojas) {
   assign(nombre_limpio, datos_hoja, envir = .GlobalEnv)
   
   # Mensaje de confirmación y almacenamiento del nombre
-  cat("Creado data frame:", nombre_limpio, "\n")
+  # cat("Creado data frame:", nombre_limpio, "\n")
   nombres_dfs_generados <- c(nombres_dfs_generados, nombre_limpio)
 }
 
@@ -262,24 +266,19 @@ for (nombre_df_provincia in nombres_dfs_generados) {
 }
 ```
 
-# Metodo Indirecto
+# Metodo de Estandarización Indirecto
 
-Utilizamos el método indirecto para calcular la relación entre el número observado y esperado de casos, es decir las razones de mortalidad estandarizadas.
+Utilizamos el método indirecto para calcular la relación entre el número observado y esperado de casos, es decir las razones de mortalidad estandarizadas (RME).
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 
-# Recalcular defunciones_totales (esto está bien como lo tienes)
+# Recalcular defunciones_totales
 defunciones_totales <- defunciones %>%
   group_by(GRUPEDAD) %>%
   summarise(
     cuenta_total = sum(cuenta_total, na.rm = TRUE)
   ) %>%
-  ungroup() # Es buena práctica desagrupar
-
-# Asegúrate de que 'total_del_pais' esté disponible y su columna 'Edad' esté limpia
-# Si 'total_del_pais' es el dataframe '01-total_del_pais' que generaste en el primer bucle
-# simplemente llámalo así:
-# total_del_pais <- get("total_del_pais", envir = .GlobalEnv) # Asegúrate de que este nombre sea correcto.
+  ungroup() 
 
 defunciones_totales <- defunciones_totales %>%
   left_join(
@@ -293,37 +292,26 @@ defunciones_totales <- defunciones_totales %>%
       0 # Si 'Ambos sexos' es NA o 0, la tasa es 0.
     )
   )
-
-# --- FIN DE LA PREPARACIÓN, INICIO DEL BUCLE DE CÁLCULO DE RME ---
-# Asegúrate de que defunciones_totales_con_tasa_nacional ya esté definido y contenga la columna 'tasa'
-# y que nombres_dfs_generados esté lleno con los nombres de tus dataframes provinciales.
-
-# Asumo que las librerías necesarias (dplyr, tidyr, etc.) ya están cargadas al inicio del script.
-
 rme_indirecta <- list()
 
 for (nombre_df_provincia in nombres_dfs_generados) {
   provincia_df <- get(nombre_df_provincia, envir = .GlobalEnv)
 
-  # --- PASO 1: Joinear la columna 'tasa_nacional' (renombrada durante el select) ---
+  # --- PASO 1: Joinear la columna 'tasa_nacional'
   provincia_df <- provincia_df %>%
     left_join(
-      # Seleccionamos GRUPEDAD, y renombramos 'tasa' a 'tasa_nacional' aquí mismo
-      defunciones_totales %>% select(GRUPEDAD, tasa_nacional = tasa), # <-- ¡CAMBIO AQUÍ!
-      by = c("Edad" = "GRUPEDAD") # Las unimos por las columnas de grupo de edad
+      # Seleccionamos GRUPEDAD, y renombramos 'tasa' a 'tasa_nacional'
+      defunciones_totales %>% select(GRUPEDAD, tasa_nacional = tasa), 
+      by = c("Edad" = "GRUPEDAD") # unimos por las columnas de grupo de edad
     ) %>%
-    # Aseguramos que la nueva columna 'tasa_nacional' no tenga NAs, reemplazándolos con 0
-    mutate(tasa_nacional = replace_na(tasa_nacional, 0)) # <--- ¡CAMBIO AQUÍ!
-  # ----------------------------------------------------------------------------------
-
+    mutate(tasa_nacional = replace_na(tasa_nacional, 0)) 
   # --- PASO 2: Calcular 'defunciones_indirectas' usando la nueva columna 'tasa_nacional' ---
   provincia_df <- provincia_df %>%
     mutate(
       # Ahora usamos 'tasa_nacional' para el cálculo
-      defunciones_indirectas = `Ambos sexos` * tasa_nacional # <--- ¡CAMBIO AQUÍ!
+      defunciones_indirectas = `Ambos sexos` * tasa_nacional 
     )
-
-  # --- Calculo de RME ---
+  # --- PASO 3: Calculo de RME ---
   total_esperado <- sum(provincia_df$defunciones_indirectas, na.rm = TRUE)
   total_observado <- sum(provincia_df$cuenta_total, na.rm = TRUE)
   if (total_esperado != 0) {
@@ -336,13 +324,13 @@ for (nombre_df_provincia in nombres_dfs_generados) {
   assign(nombre_df_provincia, provincia_df, envir = .GlobalEnv)
 }
 
-print("Razones de Mortalidad Estandarizadas Indirectas (RME):")
-print(rme_indirecta)
+# print("Razones de Mortalidad Estandarizadas Indirectas (RME):")
+# print(rme_indirecta)
 ```
 
 # Resultados
 
-```{r}
+```{r include=FALSE}
 library(tools)
 
 df_resultados <- tibble(
@@ -357,28 +345,18 @@ df_resultados <- df_resultados %>%
   mutate(
     # 1. Reemplazar guiones bajos por espacios
     provincia = gsub("_", " ", provincia),
-    
     # 2. Capitalizar la primera letra de cada palabra
     provincia = tools::toTitleCase(provincia),
-    
     # 3. Manejar casos especiales si es necesario (ej. "Del" en "Santiago Del Estero")
-    # tools::toTitleCase convierte "del" a "Del". Si quieres "del" en minúscula,
-    # puedes hacer una corrección manual, por ejemplo:
     provincia = ifelse(provincia == "Santiago Del Estero", "Santiago del Estero", provincia),
-    
-    # 4. Ajustar "Caba" a "C.A.B.A." o "Ciudad Autónoma de Buenos Aires" si prefieres
-    provincia = ifelse(provincia == "Caba", "C.A.B.A.", provincia) # O "Ciudad Autónoma de Buenos Aires"
+    # 4. Ajustar "Caba" a "C.A.B.A."
+    provincia = ifelse(provincia == "Caba", "C.A.B.A.", provincia) 
   ) %>%
-  # Opcional: Reordenar las provincias alfabéticamente o por algún criterio si lo deseas para el gráfico
   arrange(provincia)
 
 ```
 
-```{r}
-library(ggplot2)
-library(tidyr) # Necesitas tidyr para pivot_longer()
-library(dplyr) # Asegúrate de que dplyr también esté cargado
-library(kableExtra)
+```{r echo=FALSE}
 
 # --- 1. Pivotar el dataframe de resultados a formato largo ---
 df_tasas_long <- df_resultados %>%
@@ -388,12 +366,11 @@ df_tasas_long <- df_resultados %>%
     names_to = "tipo_tasa", # Nuevo nombre para la columna que contendrá los nombres originales
     values_to = "valor_tasa" # Nuevo nombre para la columna que contendrá los valores
   ) %>%
-  # Opcional: Renombrar los valores de 'tipo_tasa' para que sean más legibles en la leyenda
   mutate(
     tipo_tasa = case_when(
       tipo_tasa == "tasas_provinciales" ~ "Tasa Provincial Cruda",
       tipo_tasa == "tasas_estandar_directas" ~ "Tasa Estandarizada Directa",
-      TRUE ~ tipo_tasa # Por si hay otros valores, aunque no debería
+      TRUE ~ tipo_tasa 
     )
   )
 tasa_nacional_valor <- sum(total_del_pais$tasa_nacional * (total_del_pais$`%poblacion` / 100))
@@ -411,12 +388,12 @@ tabla_para_mostrar <- df_resultados %>% # Usamos el df_resultados ya transformad
   )
 
 # Mostrar la tabla usando kable
-kable(tabla_para_mostrar, caption = "Tabla 1: Tasas de Mortalidad por Provincia (por 1.000 habitantes)") %>%
+kable(tabla_para_mostrar, caption = " Tasas de Mortalidad por Provincia (por 1.000 habitantes)") %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"), # Opciones de estilo Bootstrap
     full_width = FALSE, # La tabla no ocupa todo el ancho de la página
-    position = "left") %>%  # Alinea la tabla a la izquierda
-    row_spec(row = 0, background = "steelblue", color = "black", extra_css = "font-weight: bold;")
+    position = "center") %>%  # Alinea la tabla a la izquierda
+    row_spec(row = 0, background = "#4682B4", color = "black", extra_css = "font-weight: bold;")
 
 # --- 2. Crear el gráfico con las dos barras por provincia ---
 ggplot(df_tasas_long) +
@@ -449,39 +426,44 @@ Nos parece importante comparar las tasas crudas y las estandarizadas ya que nos 
  
  * Si la **Tasa Cruda < Tasa Estandarizada**, la provincia tiende a tener una población más joven que la población de referencia. Su tasa cruda parece baja, pero al ajustar por edad, su mortalidad es en realidad más alta de lo que la tasa cruda sugiere. 
  
-Lo que más llama la atención en el gráfico 1 es Misiones, ya que tiene una tasa estandarizada muy por arriba de su tasa cruda, y ambas son muy elevadas en comparación con otras provincias y la tasa de mortalidad de Argentina. Esto es una señal de alerta ya que Misiones tiene una estructura de edad que es más joven que la población de referencia (o tiene una alta proporción de población en edades de baja mortalidad), pero aún así presenta una mortalidad muy elevada. Esto sugiere que el riesgo de muerte es muy alto en Misiones y esto no se debe al envejecimiento de la población. 
+Particularmente llama la atención en el gráfico 1 es Misiones, ya que tiene una tasa estandarizada muy por arriba de su tasa cruda, ambas muy elevadas en comparación con otras provincias y la tasa de mortalidad de Argentina. Esto es una señal de alerta ya dicha provincia tiene una estructura de edad más joven que la población de referencia (o bien, presenta una alta proporción de población en edades de baja mortalidad), pero aún así presenta una mortalidad muy elevada. Esto sugiere que el riesgo de muerte allí es alto y no se debe al envejecimiento de la población. 
 
-### Provincias con Tasas Estandarizadas por encima de la Nacional
+## Provincias con Tasas Estandarizadas por encima de la Nacional
+
 Además de Misiones, CABA, Formosa, La Pampa, Mendoza, San Luis y Tucumán muestran sus tasas estandarizadas por encima de la línea nacional.
 Esto significa que, si estas provincias tuvieran la misma estructura de edad que el país en su conjunto, su mortalidad sería más alta que el promedio. Esto nos indica de que existen factores de riesgo de mortalidad inherentes a la población de estas provincias que no se explican por la edad, y que necesitan atención en salud pública.
 
-### Provincias con Tasas Estandarizadas por debajo de la Nacional
+## Provincias con Tasas Estandarizadas por debajo de la Nacional
+
 Chaco, Chubut, Corrientes, Entre Ríos, Jujuy, La Rioja, Neuquén, Rio Negro, Salta, San Juan, Santa Cruz, Santa Fe, Santiago del Estero y Tierra del Fuego tienen tasas estandarizadas por debajo de la línea nacional. Esto indica que, controlando el efecto de la estructura de edad de su población, el riesgo de morir en estas provincias es menor que el promedio del país. Es una señal de una situación de mortalidad relativamente más favorable.
 
-Tasas de Mortalidad Estandarizada por Provincia en Argentina
-![](mapa_tasas.jpeg)
-En el mapa también vemos que la única provincia con tasa muy alta es Misiones ya que aparece en color rojo.
 
-```{r}
-library(ggplot2)
+![Tasas de Mortalidad Estandarizada por Provincia en Argentina](img/mapa_tasas.jpeg)
 
+En el mapa también vemos que la provincia con mayor tasa es Misiones, ya que aparece en color rojo.
+
+## Razones de Mortalidad Estandarizadas 
+
+Una vez calculadas las razones de mortalidad estandarizadas para cada provincia por el método indirecto (RME), podemos interpretarlas comparándolas con el valor de 1, que actúa como nuestro punto de referencia nacional.
+
+```{r echo=FALSE}
 tabla_para_mostrar2 <- df_resultados %>% # Usamos el df_resultados ya transformado
   select(
     Provincia = provincia,
     RME = rme
   ) 
 # Mostrar la tabla usando kable
-kable(tabla_para_mostrar2, caption = "Tabla 2: Razones de Mortalidad Estandarizadas por Provincia") %>%
+kable(tabla_para_mostrar2, caption = " Razones de Mortalidad Estandarizadas por Provincia") %>%
   kable_styling(
     bootstrap_options = c("striped", "hover", "condensed", "responsive"), # Opciones de estilo Bootstrap
     full_width = FALSE, # La tabla no ocupa todo el ancho de la página
-    position = "left") %>%  # Alinea la tabla a la izquierda
-    row_spec(row = 0, background = "steelblue", color = "black", extra_css = "font-weight: bold;") %>% 
-  row_spec(row = c(2, 9, 11, 13, 14, 19, 24), background = "lightblue", color = "black")
+    position = "center") %>%  # Alinea la tabla a la izquierda
+    row_spec(row = 0, background = "#4682B4", color = "black", extra_css = "font-weight: bold;") %>% 
+  row_spec(row = c(2, 9, 11, 13, 14, 19, 24), background = "#ADD8E6", color = "black")
 
 ggplot(df_resultados) + # Assuming your dataframe is named df_resultados_consolidados
   aes(x = provincia, y = rme) +
-  geom_col(fill = "steelblue") + # Use geom_col() for pre-summarized data
+  geom_col(fill = "#4682B4") + # Use geom_col() for pre-summarized data
   labs(
     title = "Razón de Mortalidad Estandarizada (RME) por Provincia",
     x = "Provincia",
@@ -492,7 +474,15 @@ ggplot(df_resultados) + # Assuming your dataframe is named df_resultados_consoli
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-Una vez calculadas las razones de mortalidad estandarizadas para cada provincia por el método indirecto vemos que 
 
-Razón de Mortalidad Estandarizada (RME) por Provincia en Argentina
-![](map_rme.jpeg)
+Vemos que CABA, Formosa, La Pampa, Mendoza, Misiones, San Luis y Tucumán  tiene una RME mayor que 1, lo que indica que la mortalidad observada en esa provincia es superior a la que se esperaría si su población por edad hubiera experimentado las tasas de mortalidad nacionales. En otras palabras, mueren más personas de las que se prevería basándose en la estructura de edad de la provincia y las tasas de mortalidad del país.
+
+Por el contrario, para el resto de las provincias, la mortalidad observada es inferior a la que se esperaría con las tasas de mortalidad nacionales aplicadas a su estructura de edad. Esto sugiere que mueren menos personas de las que se prevería.
+
+Este análisis nos permite identificar facilmente qué provincias tienen una mortalidad "peor" o "mejor" de lo esperado, considerando únicamente el efecto de la distribución por edad de su población y comparándolas con un estándar nacional.
+
+
+![Razón de Mortalidad Estandarizada (RME) por Provincia en Argentina](img/map_rme.jpeg)
+
+
+Por último, en la figura 2, observamos el mapa según RME, donde nuevamente se destacan Misiones y Jujuy como "peor" y "mejor" respectivamente.
