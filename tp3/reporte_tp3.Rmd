@@ -411,7 +411,7 @@ ggplot(df_tasas_long) +
   aes(x = provincia, y = valor_tasa, fill = tipo_tasa) +
   geom_col(position = "dodge") +
   labs(
-    title = "Comparación de Tasas de Mortalidad por Provincia",
+    title = "Gráfico 1: Comparación de Tasas de Mortalidad por Provincia",
     subtitle = "Tasa Provincial Cruda vs. Tasa Estandarizada Directa",
     x = "Provincia",
     y = "Valor de la Tasa (por 1.000 habitantes)", # Texto del eje Y actualizado
@@ -433,7 +433,7 @@ ggplot(df_tasas_long) +
 
 
  
-Particularmente llama la atención en el gráfico 1 es Misiones, ya que tiene una tasa estandarizada muy por arriba de su tasa cruda, ambas muy elevadas en comparación con otras provincias y la tasa de mortalidad de Argentina. Esto es una señal de alerta ya dicha provincia tiene una estructura de edad más joven que la población de referencia (o bien, presenta una alta proporción de población en edades de baja mortalidad), pero aún así presenta una mortalidad muy elevada. Esto sugiere que el riesgo de muerte allí es alto y no se debe al envejecimiento de la población. 
+Particularmente llama la atención Misiones en el gráfico 1, ya que tiene una tasa estandarizada muy por arriba de su tasa cruda, ambas muy elevadas en comparación con otras provincias y la tasa de mortalidad de Argentina. Esto es una señal de "alerta" ya que dicha provincia tiene una estructura de edad más joven que la población de referencia (o bien, presenta una alta proporción de población en edades de baja mortalidad), pero aún así presenta una mortalidad muy elevada. Esto sugiere que el riesgo de muerte allí es alto y no se debe al envejecimiento de la población. 
 
 ## Provincias con Tasas Estandarizadas por encima de la Nacional
 
@@ -474,7 +474,7 @@ ggplot(df_resultados) + # Assuming your dataframe is named df_resultados_consoli
   aes(x = provincia, y = rme) +
   geom_col(fill = "#4682B4") + # Use geom_col() for pre-summarized data
   labs(
-    title = "Razón de Mortalidad Estandarizada (RME) por Provincia",
+    title = "Gráfico 2: Razón de Mortalidad Estandarizada (RME) por Provincia",
     x = "Provincia",
     y = "RME"
   ) +
